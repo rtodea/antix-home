@@ -1,5 +1,0 @@
-ln: failed to create symbolic link '/home/robert/.local/share/applications/mimeapps.list': File exists
-desktop-session-logout: Started
-desktop-session-logout: run: exec setsid /usr/local/lib/desktop-session/desktop-session-logout extra args
-desktop-session-logout: Started
-desktop-session-logout: found ppid file.  ppid: 2504

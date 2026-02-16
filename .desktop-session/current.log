@@ -1,2 +1,0 @@
-grep: /usr/share/wayland-sessions/*.desktop: No such file or directory
-ln: failed to create symbolic link '/home/robert/.local/share/applications/mimeapps.list': File exists

@@ -10,3 +10,6 @@
 !/.icewm/
 !/.jwm/
 !/.gitignore
+.desktop-session/*.log
+.desktop-session/old-log-*
+.desktop-session/ppid.*
