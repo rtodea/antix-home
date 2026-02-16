@@ -1,0 +1,96 @@
+<JWM>
+
+<!-- Key bindings -->
+<Key key="Up">up</Key>
+<Key key="Down">down</Key>
+<Key key="Right">right</Key>
+<Key key="Left">left</Key>
+<Key key="h">left</Key>
+<Key key="j">down</Key>
+<Key key="k">up</Key>
+<Key key="l">right</Key>
+<Key key="Return">select</Key>
+<Key key="Escape">escape</Key>
+<Key mask="A" key="Tab">nextstacked</Key>
+<Key mask="A" key="F4">close</Key>
+<Key mask="A" key="#">desktop#</Key>
+<Key mask="A" key="F1">root:1</Key>
+<Key mask="A" key="F2">window</Key>
+<Key key="XF86AudioLowerVolume">exec:amixer set Master 5%-</Key>
+<Key key="XF86AudioRaiseVolume">exec:amixer set Master 5%+</Key>
+<Key key="XF86AudioMute">exec:amixer set Master toggle amixer</Key>
+<Key key="XF86MonBrightnessDown">exec:backlight-brightness -5</Key>
+<Key key="XF86MonBrightnessUp">exec:backlight-brightness +5</Key>
+
+<!-- <Key mask="CA" key="Delete">exec: desktop-session-exit</Key> -->
+<Key mask="CA" key="Left">ldesktop</Key>
+<Key mask="CA" key="Right">rdesktop</Key>
+<Key mask="CA" key="Up">udesktop</Key>
+<Key mask="CA" key="Down">ddesktop</Key>
+<Key mask="CA" key="Return">maximize</Key>
+<Key mask="C4" key="Return">minimize</Key>
+<!-- <Key mask="CA" key="e">exec: desktop-defaults-run -e</Key>    -->
+<!-- <Key mask="CA" key="r">exec: gexec</Key>                      -->
+<!-- <Key mask="CA" key="t">exec: desktop-defaults-run -t</Key>    -->
+<!-- <Key mask="C4" key="t">exec: desktop-defaults-run -r -t</Key> -->
+<!-- <Key mask="CA" key="u">exec: gftp</Key>                       -->
+<!-- <Key mask="CA" key="i">exec: desktop-defaults-run -i</Key>    -->
+<!-- <Key mask="CA" key="o">exec: libreoffice</Key>                -->
+<!-- <Key mask="CA" key="p">exec: desktop-defaults-run -t htop</Key>    -->
+<!-- <Key mask="C4" key="p">exec: desktop-defaults-run -r -t htop</Key> -->
+<!-- <Key mask="CA" key="a">exec: desktop-defaults-run -a</Key>         -->
+<!-- <Key mask="CA" key="s">exec: antixscreenshot.sh</Key>              -->
+<!-- <Key mask="CA" key="d">exec: gksu synaptic</Key>                   -->
+<!-- <Key mask="CA" key="f">exec: desktop-defaults-run -fm</Key>        -->
+<!-- <Key mask="C4" key="f">exec: desktop-defaults-run -r -fm </Key>    -->
+<!-- <Key mask="CA" key="g">exec: desktop-defaults-run -te</Key>        -->
+<!-- <Key mask="C4" key="g">exec: desktop-defaults-run -r -te</Key>     -->
+<!-- <Key mask="CA" key="h">exec: desktop-defaults-run -b file:/usr/share/antiX/FAQ/index.html</Key> -->
+<!-- <Key mask="CA" key="k">exec: desktop-session-exit</Key>    -->
+<!-- <Key mask="CA" key="l">exec: xlock</Key>                   -->
+<!-- <Key mask="CA" key="z">exec: grsync</Key>                  -->
+<!-- <Key mask="CA" key="x">exec: xkill</Key>                   -->
+<!-- <Key mask="CA" key="c">exec: antixcc.sh</Key>              -->
+<!-- <Key mask="CA" key="v">exec: desktop-defaults-run -v</Key> -->
+<!-- <Key mask="CA" key="b">exec: desktop-defaults-run -b</Key> -->
+<!-- <Key key="F1">exec: desktop-defaults-run -t</Key>          -->
+<!-- The F2 key below conflicts with the F2 (rename) in zzzfm   -->
+<!-- <Key key="F2">exec: gexec</Key>                            -->
+<!-- <Key key="F3">exec: desktop-defaults-run -fm</Key>         -->
+<!-- <Key key="F4">exec: desktop-defaults-run -b</Key>          -->
+<!-- <Key key="F5">exec: antixcc.sh</Key>                       -->
+<!-- <Key key="F6">exec: antixscreenshot.sh</Key>               -->
+<!-- <Key key="F11">exec: sudo pm-suspend</Key>                 -->
+
+<!-- Move a window vertically or horizontally with multi-screen installation -->
+<!-- Use the logo key + arrow key -->
+<Key mask="4" key="Left">maxleft</Key>
+<Key mask="4" key="Right">maxright</Key>
+<Key mask="4" key="Up">maxtop</Key>
+<Key mask="4" key="Down">maxbottom</Key>
+
+<!--Wingrid-->
+<Key mask="C" key="1">exec:wingrid-left.sh</Key>
+<Key mask="C" key="2">exec:wingrid-right.sh</Key>
+<Key mask="C" key="3">exec:wingrid-top.sh</Key>
+<Key mask="C" key="4">exec:wingrid-bottom.sh</Key>
+<Key mask="C" key="5">exec:wingrid-topleft.sh</Key>
+<Key mask="C" key="6">exec:wingrid-topright.sh</Key>
+<Key mask="C" key="7">exec:wingrid-bottomleft.sh</Key>
+<Key mask="C" key="8">exec:wingrid-bottomright.sh</Key>
+<Key mask="C" key="9">exec:wingrid-maximize.sh</Key>
+<Key mask="C" key="0">exec:wingrid-close.sh</Key>
+
+<!-- Activate the printscreen key with the antixscreenshot program -->
+<!-- You can replace the number 107 with the number of the key of your keyboard if this does not work -->
+<!-- Type in a terminal the command “xev” -->
+<!-- Type on your “PrtScn” key -->
+<!-- In the terminal, you will see the word “keycode” followed by the number of your “PrtScn” key -->
+<Key keycode="107">exec:antixscreenshot.sh</Key>
+
+<!-- Activate the calculator key with the galculator program -->
+<!-- You can replace the number 148 with the number of the key of your keyboard if this does not work -->
+<!-- Follow the same procedure as the printscreen key -->
+<!-- <Key keycode="148">exec:galculator</Key> -->
+
+</JWM>

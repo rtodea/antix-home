@@ -1,0 +1,75 @@
+<!-- 444-Red by Tman -->
+<!-- Update 2023 for new font coding -->
+
+<JWM>
+
+<WindowStyle>
+	<Font>DejaVu Sans-13:style=Book:antialias=true</Font>
+	<Width>2</Width>
+	<Height>26</Height>
+	<Active>
+		<Foreground>#ffffff</Foreground>
+		<Background>#8D0D13</Background>
+       	<Outline>black</Outline>
+	</Active>
+	
+		<Foreground>#000000</Foreground>
+		<Background>#bfbfbf:#ffffff</Background>
+       	<Outline>black</Outline>
+	
+</WindowStyle>
+
+<TaskListStyle>
+	<Font>DejaVu Sans-12:style=Book:antialias=true</Font>
+	<Active>
+	<Foreground>#b0b0b0</Foreground>
+	<Background>#C72628:#621314</Background>
+	</Active>
+	
+	<Foreground>#ffffff</Foreground>
+	<Background>#621314:#DD1D16</Background>
+	
+</TaskListStyle>
+
+<TrayStyle>
+	<Font>DejaVu Sans-13:style=Book:weight=Bold:antialias=true</Font>
+	<Foreground>#ffffff</Foreground>
+	<Background>#8D0D13</Background>
+</TrayStyle>
+
+<ClockStyle>
+	<Font>DejaVu Sans-16:style=Book:weight=Bold:antialias=true</Font>
+	<Foreground>#ffffff</Foreground>
+	<Background>#8D0D13</Background>
+</ClockStyle>
+
+<PagerStyle>
+	<Outline>black</Outline>
+	<Foreground>#C8E4FF</Foreground>
+	<Background>#831D22</Background>
+	<Active>
+	<Foreground>#BEE4ED</Foreground>
+	<Background>#AF2323</Background>
+	</Active>
+</PagerStyle>
+
+<MenuStyle>
+	<Font>DejaVu Sans-13:style=Book:antialias=true</Font>
+	<Foreground>#000000</Foreground>
+	<Background>#ece9d8</Background>
+        <Outline>#000000</Outline>
+       <Active>
+	<Foreground>#ffffff</Foreground>
+	<Background>#8D0D13</Background>
+	</Active>
+        <Opacity>0.85</Opacity>
+</MenuStyle>
+
+<PopupStyle enabled="true">
+	<Font>DejaVu Sans-12:style=Book:antialias=true</Font>
+	<Outline>black</Outline>
+	<Foreground>#ffffff</Foreground>
+	<Background>#8D0D13</Background>
+</PopupStyle>
+
+</JWM>

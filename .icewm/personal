@@ -1,0 +1,2 @@
+
+prog "Personal Menu Editor " /usr/share/pixmaps/icewm_peditor.png /usr/local/bin/icewm-quick-personal-menu-manager

@@ -1,0 +1,75 @@
+<JWM>
+
+<!-- military -->
+<!-- Update 2023 for new font coding -->
+
+<WindowStyle>
+	<Font>Terminus-14:style=Bold:antialias=true</Font>
+	<Width>5</Width>
+	<Height>22</Height>
+	<Active>
+		<Foreground>white</Foreground>
+		<Background>olive drab:#a3853f</Background>
+	<Outline>olive</Outline>
+	</Active>
+	
+		<Foreground>black</Foreground>
+		<Background>#a3853f:olive drab</Background>
+	<Outline>olive</Outline>
+	
+</WindowStyle>
+
+<TaskListStyle>
+	<Font>DejaVu Sans-12:style=Book:antialias=true</Font>
+	<Active>
+	<Foreground>white</Foreground>
+	<Background>olive drab</Background>
+	</Active>
+	
+	<Foreground>black</Foreground>
+	<Background>#a3853f</Background>
+	
+</TaskListStyle>
+
+<TrayStyle>
+	<Font>DejaVu Sans-11:style=Book:antialias=true</Font>
+	<Background>olive</Background>
+	<Foreground>black</Foreground>
+</TrayStyle>
+
+<ClockStyle>
+	<Font>Terminus-16:style=Bold:antialias=true</Font>
+	<Foreground>black</Foreground>
+	<Background>olive</Background>
+</ClockStyle>
+
+<PagerStyle>
+	<Outline>black</Outline>
+	<Foreground>#a3853f</Foreground>
+	<Background>olive drab</Background>
+	<Active>
+	<Foreground>white</Foreground>
+	<Background>black</Background>
+	</Active>
+</PagerStyle>
+
+<MenuStyle>
+	<Font>DejaVu Sans-11:style=Book:antialias=true</Font>
+	<Foreground>black</Foreground>
+	<Background>olive drab</Background>
+        <Outline>#000000</Outline>
+       <Active>
+	<Foreground>white</Foreground>
+	<Background>#385E3F</Background>
+	</Active>
+        <Opacity>0.85</Opacity>
+</MenuStyle>
+
+<PopupStyle enabled="true">
+	<Font>DejaVu Sans-10:style=Book:antialias=true</Font>
+	<Outline>black</Outline>
+	<Foreground>white</Foreground>
+	<Background>olive drab</Background>
+</PopupStyle>
+
+</JWM>

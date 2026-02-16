@@ -1,0 +1,12 @@
+/*
+!/.bashrc
+!/.zshrc
+!/.Xresources
+!/.config/
+.config/*
+!/.config/i3/
+!/.desktop-session/
+!/.fluxbox/
+!/.icewm/
+!/.jwm/
+!/.gitignore

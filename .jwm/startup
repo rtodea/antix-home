@@ -1,0 +1,9 @@
+<JWM>
+
+<!-- Applications used in conjunction with JWM -->
+<StartupCommand> 
+#Check localization of Zzz File Manager:
+if [ ! -f ~/.config/zzzfm/zzzfm_already_localized ]; then zzzfmlocalize ; fi
+</StartupCommand>
+</JWM>
+

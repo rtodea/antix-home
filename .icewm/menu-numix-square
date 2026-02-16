@@ -1,0 +1,25 @@
+prog "App Select" /usr/share/icons/numix-square-antix/48x48/apps/gnome-searchtool.png /usr/local/bin/app-select
+prog "Terminal" /usr/share/icons/numix-square-antix/48x48/apps/terminal.png desktop-defaults-run -t
+prog "File Manager" /usr/share/icons/numix-square-antix/48x48/apps/file-manager.png desktop-defaults-run -fm
+prog "Web Browser" /usr/share/icons/numix-square-antix/48x48/apps/web-browser.png desktop-defaults-run -b
+prog "Editor" /usr/share/icons/numix-square-antix/48x48/apps/text-editor.png desktop-defaults-run -te
+separator
+menufile "Applications" /usr/share/icons/numix-square-antix/48x48/apps/applications.png menu-applications
+prog "Refresh Menu" /usr/share/icons/numix-square-antix/48x48/apps/update-manager.png desktop-menu --write-out-global
+separator
+menufile "Personal" /usr/share/icons/numix-square-antix/48x48/apps/preferences-desktop-user.png personal
+menuprog "Recent Files" /usr/share/icons/numix-square-antix/48x48/places/folder-recent.png /usr/local/bin/icewm-menu-recentfiles.sh
+separator
+menu "Desktop" /usr/share/icons/numix-square-antix/48x48/apps/user-desktop.png {
+    menufile "Other Desktops" /usr/share/icons/numix-square-antix/48x48/apps/user-desktop.png /usr/share/desktop-session/wm-menus/icewm-wm-menu
+    separator
+    menuprog "Desktop Folder" /usr/share/icons/numix-square-antix/48x48/places/desktop.png /usr/local/bin/icewm-menu-Desktop.sh
+    separator
+    prog "RoxPanel on/off" /usr/share/icons/numix-square-antix/48x48/apps/rox-panel.png paneltoggle.sh
+    prog "Conky on/off" /usr/share/icons/numix-square-antix/48x48/apps/conky-on-off.png conkytoggle.sh
+}
+separator
+    prog "App Killer" /usr/share/icons/numix-square-antix/48x48/apps/appkill.png xkill
+    prog "Control Centre" /usr/share/icons/numix-square-antix/48x48/apps/control-center2.png antixcc.sh
+}
+separator

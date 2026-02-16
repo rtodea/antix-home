@@ -1,0 +1,76 @@
+<!-- Title: Jwm-Vista Author: Tom new for jwm 2.0, replaces borderstyle above --> 
+<!-- Modified by missTell for antiX 19 -->
+<!-- Update 2023 for new font coding -->
+
+<JWM>
+
+<WindowStyle> 
+	<Font>Ubuntu-10:style=Regular:antialias=true</Font> 
+	<Width>2</Width 
+	<Height>20</Height> 
+	<Active> 
+		<Foreground>gray70</Foreground> 
+		<Background>gray20</Background> 
+	<Outline>black</Outline> 
+	</Active> 
+	 
+		<Foreground>gray20</Foreground> 
+		<Background>gray70</Background> 
+	<Outline>black</Outline> 
+	 
+</WindowStyle> 
+
+<TaskListStyle> 
+	<Font>Ubuntu-12:style=Regular:antialias=true</Font> 
+	<Active>
+	<Foreground>gray90</Foreground> 
+	<Background>gray30</Background> 
+	</Active>
+	
+	<Foreground>gray90</Foreground> 
+	<Background>gray50</Background> 
+	
+</TaskListStyle> 
+
+<TrayStyle> 
+	<Font>Ubuntu-12:style=Regular:antialias=true</Font> 
+	<Background>gray20</Background> 
+	<Foreground>gray90</Foreground> 
+</TrayStyle> 
+
+<ClockStyle>
+	<Font>Ubuntu-12:style=Regular:antialias=true</Font>
+	<Foreground>gray90</Foreground>
+	<Background>gray20</Background>
+</ClockStyle>
+
+<PagerStyle> 
+	<Outline>black</Outline> 
+	<Foreground>gray80</Foreground> 
+	<Background>gray50</Background> 
+	<Active>
+	<Foreground>#2196F3</Foreground> 
+	<Background>gray50</Background> 
+	</Active>
+</PagerStyle> 
+
+<MenuStyle> 
+	<Font>Ubuntu-10:style=Regular:antialias=true</Font> 
+	<Foreground>gray90</Foreground> 
+	<Background>gray20</Background> 
+        <Outline>black</Outline>
+       <Active>
+	<Foreground>white</Foreground> 
+	<Background>#2196F3</Background> 
+	</Active>
+        <Opacity>1</Opacity>
+</MenuStyle> 
+
+<PopupStyle enabled="true">
+	<Font>Ubuntu-10:style=Regular:antialias=true</Font> 
+	<Outline>black</Outline> 
+	<Foreground>black</Foreground> 
+	<Background>gray80</Background> 
+</PopupStyle>
+
+</JWM>

@@ -1,0 +1,74 @@
+<JWM>
+<!-- shades of grey -->
+<!-- Update 2023 for new font coding -->
+
+<WindowStyle>
+	<Font>Ubuntu-12:style=Regular:antialias=true</Font>
+	<Width>4</Width>
+	<Height>20</Height>
+	<Active>
+		<Foreground>white</Foreground>
+		<Background>grey33:grey66</Background>
+	<Outline>grey22</Outline>
+	</Active>
+	
+		<Foreground>grey44</Foreground>
+		<Background>grey22:black</Background>
+	<Outline>black</Outline>
+	
+</WindowStyle>
+
+<TaskListStyle>
+	<Font>Ubuntu-12:style=Regular:antialias=true</Font>
+	<Active>
+	<Foreground>white</Foreground>
+	<Background>grey33:grey66</Background>
+	</Active>
+	
+	<Foreground>grey44</Foreground>
+	<Background>grey22:black</Background>
+	
+</TaskListStyle>
+
+<TrayStyle>
+	<Font>Ubuntu-12:style=Regular:weight=Bold:antialias=true</Font>
+	<Background>grey33</Background>
+	<Foreground>white</Foreground>
+</TrayStyle>
+
+<ClockStyle>
+	<Font>Ubuntu-16:style=Regular:weight=Bold:antialias=true</Font>
+	<Foreground>grey11</Foreground>
+	<Background>grey44</Background>
+</ClockStyle>
+
+<PagerStyle>
+	<Outline>darkred</Outline>
+	<Foreground>grey44</Foreground>
+	<Background>grey22</Background>
+	<Active>
+	<Foreground>grey55</Foreground>
+	<Background>grey66</Background>
+	</Active>
+</PagerStyle>
+
+<MenuStyle>
+	<Font>Ubuntu-12:style=Regular:antialias=true</Font>
+	<Foreground>grey11</Foreground>
+	<Background>grey44</Background>
+        <Outline>#000000</Outline>
+       <Active>
+	<Foreground>white</Foreground>
+	<Background>grey33:grey66</Background>
+	</Active>
+        <Opacity>0.85</Opacity>
+</MenuStyle>
+
+<PopupStyle>
+	<Font>Ubuntu-10:style=Regular:antialias=true</Font>
+	<Outline>darkred</Outline>
+	<Foreground>black</Foreground>
+	<Background>grey66</Background>
+</PopupStyle>
+
+</JWM>

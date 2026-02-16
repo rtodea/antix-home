@@ -1,0 +1,29 @@
+<JWM>
+    <Program label="App Select" icon="/usr/share/icons/papirus-antix/48x48/apps/gnome-searchtool.png">/usr/local/bin/app-select</Program>
+    <Program label="Terminal" icon="/usr/share/icons/papirus-antix/48x48/apps/terminal.png">desktop-defaults-run -t</Program>
+    <Program label="File Manager" icon="/usr/share/icons/papirus-antix/48x48/apps/file-manager.png">desktop-defaults-run -fm</Program>
+    <Program label="Web Browser" icon="/usr/share/icons/papirus-antix/48x48/apps/web-browser.png">desktop-defaults-run -b</Program>
+    <Program label="Editor" icon="/usr/share/icons/papirus-antix/48x48/apps/text-editor.png">desktop-defaults-run -te</Program>
+    <Separator/>
+    <Menu label="Personal" icon="/usr/share/icons/papirus-antix/48x48/apps/preferences-desktop-user.png">
+        <Include>$HOME/.jwm/personal</Include>
+    </Menu>
+    <Menu label="Applications" icon="/usr/share/icons/papirus-antix/48x48/apps/applications.png">
+        <Include>$HOME/.jwm/menu-applications</Include>
+    </Menu>
+    <Program label="Refresh Menu" icon="/usr/share/icons/papirus-antix/48x48/apps/update-manager.png">desktop-menu --write-out-global && jwm -restart</Program>
+    <Separator/>
+    <Menu label="Desktop" icon="/usr/share/icons/papirus-antix/48x48/apps/user-desktop.png">
+        <Menu label="Other Desktops" icon="/usr/share/icons/papirus-antix/48x48/apps/user-desktop.png">
+            <Include>/usr/share/desktop-session/wm-menus/jwm-wm-menu</Include>
+        </Menu>
+        <Program label="RoxPanel on/off" icon="/usr/share/icons/papirus-antix/48x48/apps/rox-panel.png">paneltoggle.sh</Program>
+        <Program label="Conky on/off" icon="/usr/share/icons/papirus-antix/48x48/apps/conky-on-off.png">conkytoggle.sh</Program>
+    </Menu>
+    <Separator/>
+    <Program label="App Killer" icon="/usr/share/icons/papirus-antix/48x48/apps/appkill.png">xkill</Program>
+    <Program label="Control Centre" icon="/usr/share/icons/papirus-antix/48x48/apps/control-center2.png">antixcc.sh</Program>
+    <Program label="Run" icon="/usr/share/icons/papirus-antix/48x48/apps/gnome-run.png">gexec</Program>
+    <Separator/>
+    <Include>$HOME/.jwm/themes-list</Include>
+</JWM>
