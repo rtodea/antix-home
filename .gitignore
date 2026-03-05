@@ -13,3 +13,4 @@
 .desktop-session/*.log
 .desktop-session/old-log-*
 .desktop-session/ppid.*
+!bin
