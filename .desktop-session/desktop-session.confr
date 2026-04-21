@@ -98,7 +98,7 @@ SCREEN_BLANK_TIME="3600"
 #This is to set the other desktops window to pop up or not.
 #true = pop up
 #false = no pop up
-OTHER_DESKTOPS_WINDOW="false"
+OTHER_DESKTOPS_WINDOW="true"
 
 #Default Sound Level
 #Set the sound volume level when starting up to default level when startup sound is true
