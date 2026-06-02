@@ -227,7 +227,7 @@ TaskBarAtTop=0 # 0/1
 TaskBarKeepBelow=0 # 0/1
 
 #  Auto hide task bar after delay
-TaskBarAutoHide=0 # 0/1
+TaskBarAutoHide=1 # 0/1
 
 #  Auto show task bar when fullscreen window active
 # TaskBarFullscreenAutoShow=1 # 0/1
