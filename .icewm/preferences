@@ -779,17 +779,17 @@ KeySysWorkspace3="Alt+3"
 
 KeySysWorkspace4="Alt+4"
 
-# KeySysWorkspace5="Alt+5"
+KeySysWorkspace5="Alt+5"
 
-# KeySysWorkspace6="Alt+6"
+KeySysWorkspace6="Alt+6"
 
-# KeySysWorkspace7="Alt+7"
+KeySysWorkspace7="Alt+7"
 
-# KeySysWorkspace8="Alt+8"
+KeySysWorkspace8="Alt+8"
 
-# KeySysWorkspace9="Alt+9"
+KeySysWorkspace9="Alt+9"
 
-# KeySysWorkspace10="Alt+0"
+KeySysWorkspace10="Alt+0"
 
 # KeySysWorkspace11="Alt+bracketleft"
 
@@ -803,17 +803,17 @@ KeySysWorkspace3TakeWin="Alt+Ctrl+Shift+3"
 
 KeySysWorkspace4TakeWin="Alt+Ctrl+Shift+4"
 
-# KeySysWorkspace5TakeWin="Alt+Ctrl+Shift+5"
+KeySysWorkspace5TakeWin="Alt+Ctrl+Shift+5"
 
-# KeySysWorkspace6TakeWin="Alt+Ctrl+Shift+6"
+KeySysWorkspace6TakeWin="Alt+Ctrl+Shift+6"
 
-# KeySysWorkspace7TakeWin="Alt+Ctrl+Shift+7"
+KeySysWorkspace7TakeWin="Alt+Ctrl+Shift+7"
 
-# KeySysWorkspace8TakeWin="Alt+Ctrl+Shift+8"
+KeySysWorkspace8TakeWin="Alt+Ctrl+Shift+8"
 
-# KeySysWorkspace9TakeWin="Alt+Ctrl+Shift+9"
+KeySysWorkspace9TakeWin="Alt+Ctrl+Shift+9"
 
-# KeySysWorkspace10TakeWin="Alt+Ctrl+Shift+0"
+KeySysWorkspace10TakeWin="Alt+Ctrl+Shift+0"
 
 # KeySysWorkspace11TakeWin="Alt+Ctrl+Shift+bracketleft"
 
@@ -839,7 +839,7 @@ KeySysShowDesktop="Alt+Ctrl+d"
 
 KeySysCollapseTaskBar="Alt+Ctrl+h"
 
-WorkspaceNames=" 1 ", " 2 ", " 3 ", " 4 "
+WorkspaceNames=" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 ", " 10 "
 # KeyboardLayouts=""
 
 #  Items supported in menu window (rmsnxfhualytickw)
