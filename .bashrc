@@ -149,3 +149,5 @@ export NVM_DIR="$HOME/.config/nvm"
 
 . "$HOME/.local/share/../bin/env"
 eval "$(starship init bash)"
+
+. "$HOME/.local/bin/env"
