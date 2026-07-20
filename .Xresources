@@ -1,3 +1,9 @@
+! Mouse cursor. DMZ-White ships real 24/32/48 pixmaps, so 48 is a genuine
+! size rather than a blurry upscale. Covers legacy/Xt apps; XCURSOR_SIZE in
+! ~/.xsessionrc covers GTK/Qt/Chrome and the i3 root cursor.
+Xcursor.theme: DMZ-White
+Xcursor.size: 48
+
 ! xcalc settings
 # include ".config/xresources.d/xcalc/xcalc.conf"
 

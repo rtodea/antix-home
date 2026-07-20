@@ -1,0 +1,11 @@
+# Sourced by /etc/X11/Xsession.d/40x11-common_xsessionrc before the window
+# manager starts, so these are set for every X client in the session.
+
+# Mouse cursor size. This must be exported before i3 starts: i3 reads it when
+# setting the root-window cursor, and GTK/Qt/Chrome read it at startup. Setting
+# it only in ~/.Xresources would leave those apps at the default 24px.
+#
+# DMZ-White provides 24, 32 and 48 as real pixmaps -- 48 is the largest true
+# size, so drop to 32 here (and in ~/.Xresources) if this is too big.
+export XCURSOR_THEME=DMZ-White
+export XCURSOR_SIZE=48
