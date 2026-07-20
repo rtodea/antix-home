@@ -57,28 +57,51 @@ The `.icewm/` configuration is still in the repo but is no longer used.
 
 ## Display: 4K Panel Run at 1920x1080
 
-The internal panel (`eDP-1`) is natively **3840x2160**, but the session runs it
-at **1920x1080**.
+The internal panel (`eDP-1`) runs in its native **3840x2160** mode with a
+**0.5 transform**, giving a 1920x1080 logical framebuffer. It is *not* set to a
+native 1920x1080 mode.
 
-**This is the only thing making the desktop readable.** There is no `Xft.dpi`,
-no GDK/Qt scale factor and no compositor scaling anywhere in the setup — the
-readable size comes entirely from the reduced mode. If `eDP-1` ever reverts to
-its native resolution, everything becomes unreadably small, and the fix is the
-resolution, not the font sizes.
+**This is the only thing making the desktop readable.** There is no `Xft.dpi`
+and no GDK/Qt scale factor — the readable size comes entirely from the
+transform. If it is ever lost, everything becomes unreadably small, and the fix
+is the display transform, not the font sizes.
 
-Nothing on disk used to set this, so it survived only as long as the running X
-session did. It is now pinned by `~/bin/pin-internal-resolution`, wired into
-the i3 config with `exec_always` so it re-applies on every start and reload:
+It is set by `~/.screenlayout/default.sh` (tracked in this repo):
 
 ```bash
-xrandr --output eDP-1 --mode 1920x1080
+xrandr --output eDP-1 --primary --mode 3840x2160 --pos 0x0 --scale ".5x.5"
 ```
 
-Note `--mode` rather than `--auto`: `--auto` selects the *preferred* mode,
-which is the native 4K being avoided.
+### How it gets applied at login
 
-The script is a no-op when `eDP-1` is switched off, so it does not undo
-`~/bin/show-on-external-display-only`.
+The chain is not obvious, and it is easy to conclude nothing sets the
+resolution at all:
+
+```
+slimski  ->  /etc/X11/Xsession  ->  desktop-session i3  ->  i3
+                                          |
+                                          +-> autoscale-antix
+                                                   |
+                                                   +-> ~/.screenlayout/default.sh
+```
+
+`desktop-session` runs `autoscale-antix` when `AUTOSCALE_ENABLE="true"` in
+`~/.desktop-session/desktop-session.conf`. That script would otherwise apply
+its own HiDPI guess, but it exits early when `~/.screenlayout/default.sh`
+exists and simply runs it instead. So `default.sh` wins, and the autoscale
+heuristic never gets a say.
+
+Two other early-exit conditions in `autoscale-antix` are worth knowing:
+`~/.desktop-session/set-screen` short-circuits it entirely, and any `Xft.dpi:`
+line in `~/.Xresources` makes it exit without doing anything.
+
+### Do not add an xrandr call to the i3 config
+
+A plain `xrandr --output eDP-1 --mode 1920x1080` does **not** reproduce this
+setup. Run on top of the existing 0.5 transform it yields a 960x540
+framebuffer; without it you get a native 1920x1080 mode, which the panel then
+interpolates. Either way the tuned scaling is lost. If the layout ever needs
+changing, edit `~/.screenlayout/default.sh` (or regenerate it with `arandr`).
 
 ### Fonts and cursor at this resolution
 

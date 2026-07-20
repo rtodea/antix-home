@@ -45,6 +45,12 @@
 !/bin/
 !/docs/
 
+# --- Display layout ---------------------------------------------------------
+# ~/.screenlayout/default.sh sets the panel resolution and is run at every
+# session start by autoscale-antix. Losing it means losing the readable
+# desktop, so it is tracked rather than left as local-only state.
+!/.screenlayout/
+
 # --- Safety net -------------------------------------------------------------
 # This repository has a public remote (github.com/rtodea/antix-home). The
 # paths below must never be committed regardless of any negation above, so
