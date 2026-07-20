@@ -1,16 +1,64 @@
+# This repository tracks configuration files directly in $HOME, so the default
+# is to ignore everything and re-include tracked paths explicitly.
+#
+# Two git rules drive the structure below:
+#   1. A file cannot be re-included if one of its parent directories is
+#      excluded, so each level must be un-ignored before its contents can be.
+#      This is why ~/.config needs three rules rather than one.
+#   2. The last matching pattern wins, which is what makes the safety net at
+#      the bottom of this file authoritative.
+#
+# To start tracking something new, add an explicit negation here rather than
+# reaching for "git add -f".
+
 /*
+
+# --- Shell and X session ----------------------------------------------------
+!/.gitignore
+!/.Xresources
+!/.xsessionrc
 !/.bashrc
 !/.zshrc
-!/.Xresources
-!/.config/
-.config/*
-!/.config/i3/
+
+# --- Window manager and session configs -------------------------------------
 !/.desktop-session/
 !/.fluxbox/
 !/.icewm/
 !/.jwm/
-!/.gitignore
-.desktop-session/*.log
-.desktop-session/old-log-*
-.desktop-session/ppid.*
-!bin
+
+# Session runtime state, not configuration.
+/.desktop-session/*.log
+/.desktop-session/old-log-*
+/.desktop-session/ppid.*
+
+# --- ~/.config --------------------------------------------------------------
+# Re-include the directory, exclude everything inside it, then re-include only
+# the subdirectories actually tracked. The /.config/* line is load-bearing:
+# without it this section would pull in browser profiles, caches and tokens.
+!/.config/
+/.config/*
+!/.config/i3/
+!/.config/autostart/
+!/.config/gtk-3.0/
+
+# --- Scripts and documentation ----------------------------------------------
+!/bin/
+!/docs/
+
+# --- Safety net -------------------------------------------------------------
+# This repository has a public remote (github.com/rtodea/antix-home). The
+# paths below must never be committed regardless of any negation above, so
+# they are listed last and therefore win.
+.ssh/
+.gnupg/
+.kube/
+.aws/
+.docker/
+.netrc
+.env
+*.pem
+*.key
+*_rsa
+*_ed25519
+id_*
+credentials
