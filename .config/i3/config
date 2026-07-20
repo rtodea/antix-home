@@ -13,7 +13,12 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace, Noto Color Emoji 8
+#
+# "Noto Color Emoji" is deliberately NOT listed here — see the note in the
+# bar {} block. Emoji in window titles still render fine via fontconfig
+# fallback; it is naming the family explicitly that inflates pango's metrics
+# and clips the text.
+font pango:FiraCode Nerd Font Mono 11
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -187,4 +192,14 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
         status_command i3status
+
+        # Do NOT put "Noto Color Emoji" in this font list. It is a bitmap-only
+        # colour font, and pango reports inflated ascent/descent for it. i3bar
+        # sizes the bar from those metrics but renders with the primary font,
+        # which is what was clipping the status text. FiraCode Nerd Font already
+        # carries icon glyphs, so no emoji fallback is needed here.
+        font pango:FiraCode Nerd Font Mono 11
+
+        # Breathing room above/below the text so descenders aren't shaved off.
+        padding 2px 6px 2px 6px
 }
