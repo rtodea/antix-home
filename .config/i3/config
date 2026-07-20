@@ -24,6 +24,11 @@ font pango:FiraCode Nerd Font Mono 11
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
+# Pin the internal panel to 1920x1080. This is what makes the desktop readable
+# on the 4K panel -- there is no DPI/font scaling involved -- so it must be
+# re-applied on every start and reload, not just at first login.
+exec_always --no-startup-id $HOME/bin/pin-internal-resolution
+
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
