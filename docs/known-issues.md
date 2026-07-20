@@ -49,8 +49,71 @@ See [graphics.md](graphics.md) for PRIME offload commands. The GPU is functional
 
 ## Current Desktop Environment
 
-- **Session:** IceWM 3.6.0 (X11)
+- **Session:** i3 4.22 (X11) — switched from IceWM in July 2026
 - **Display server:** Xorg
+- **Config:** `~/.config/i3/config` (tracked in the home git repo)
+
+The `.icewm/` configuration is still in the repo but is no longer used.
+
+## Display: 4K Panel Run at 1920x1080
+
+The internal panel (`eDP-1`) is natively **3840x2160**, but the session runs it
+at **1920x1080**.
+
+**This is the only thing making the desktop readable.** There is no `Xft.dpi`,
+no GDK/Qt scale factor and no compositor scaling anywhere in the setup — the
+readable size comes entirely from the reduced mode. If `eDP-1` ever reverts to
+its native resolution, everything becomes unreadably small, and the fix is the
+resolution, not the font sizes.
+
+Nothing on disk used to set this, so it survived only as long as the running X
+session did. It is now pinned by `~/bin/pin-internal-resolution`, wired into
+the i3 config with `exec_always` so it re-applies on every start and reload:
+
+```bash
+xrandr --output eDP-1 --mode 1920x1080
+```
+
+Note `--mode` rather than `--auto`: `--auto` selects the *preferred* mode,
+which is the native 4K being avoided.
+
+The script is a no-op when `eDP-1` is switched off, so it does not undo
+`~/bin/show-on-external-display-only`.
+
+### Fonts and cursor at this resolution
+
+Two settings exist because of the panel, and are easy to mistake for scaling:
+
+| Setting | Where | Value |
+|---------|-------|-------|
+| i3 bar + window title font | `~/.config/i3/config` | `FiraCode Nerd Font Mono 11` |
+| Cursor size | `~/.Xresources`, `~/.xsessionrc`, `gtk-3.0/settings.ini` | `48` |
+
+Cursor size must be set in all three places: GTK/Qt/Chrome read `XCURSOR_SIZE`
+from the environment at startup, **not** the X resource database, so
+`~/.Xresources` alone leaves most applications at the 24px default.
+
+### Gotcha: do not put "Noto Color Emoji" in an i3 font list
+
+i3 previously used `pango:monospace, Noto Color Emoji 8`, which clipped the
+text in the bar and in window titles. Noto Color Emoji is a bitmap-only colour
+font, so pango reports inflated ascent/descent for it; i3bar sized the bar from
+those metrics but rendered with the primary font. Emoji still resolve through
+normal fontconfig fallback, so the family never needs to be listed explicitly.
+
+### Gotcha: dex ignores AutostartCondition
+
+The Magnus screen magnifier used to launch over the desktop on every i3 start.
+Its entry in `/etc/xdg/autostart/` is guarded by an `AutostartCondition`
+GSettings key that is set to `false`, but **dex** — which i3 uses for XDG
+autostart — does not implement `AutostartCondition` and ran it regardless.
+MATE/IceWM honour the condition, which is why it only appeared under i3.
+
+Suppressed with a `Hidden=true` override at
+`~/.config/autostart/magnus-autostart.desktop`, which takes precedence over
+`/etc/xdg/autostart` without touching the packaged file. Delete that file to
+re-enable the magnifier. The same trick works for any other unwanted entry in
+`/etc/xdg/autostart` (`onboard`, `blueman`, `clipit`, …).
 
 ## Note on Omarchy / Hyprland (DHH's Desktop)
 
