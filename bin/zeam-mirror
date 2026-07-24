@@ -1,0 +1,75 @@
+#!/bin/sh
+# zeam-mirror — control the zeam-personalization Postgres mirror container on p73.
+#
+# The mirror is a postgres:15-alpine container (name: zeam-mirror-postgres) that the
+# Hetzner-deployed zeam-personalization app runs against instead of prod Redshift.
+# Compose file: ~/git/zeam/zeam-notes/_inbox/zeam-prod-mirror/scripts/serving/docker-compose.mirror.yml
+# Data lives in the `zeam-mirror_pgdata` Docker volume (ext4, on /). Losing the container
+# does NOT lose the data; losing that volume does.
+#
+# By design it auto-starts on boot (dockerd S01docker + restart:unless-stopped). To keep it
+# from booting, use `disable` below — that's the whole point of this script.
+
+set -e
+COMPOSE_DIR="$HOME/git/zeam/zeam-notes/_inbox/zeam-prod-mirror/scripts/serving"
+COMPOSE_FILE="$COMPOSE_DIR/docker-compose.mirror.yml"
+NAME=zeam-mirror-postgres
+
+usage() {
+  cat <<EOF
+usage: zeam-mirror {up|down|status|disable|enable|logs|psql}
+
+  up       start (or recreate) the mirror from compose         [auto-starts on boot after this]
+  down     stop + remove the container (data volume kept)
+  status   container state, published port, restart policy, row counts
+  disable  stop it AND stop it from ever booting again          <-- "don't boot up" switch
+  enable   re-arm boot autostart and start it now
+  logs     tail the container logs
+  psql     open a psql shell inside the container (loopback)
+EOF
+}
+
+case "${1:-status}" in
+  up)
+    sudo docker compose -f "$COMPOSE_FILE" up -d --force-recreate
+    ;;
+  down)
+    # -v is NOT passed: the pgdata volume is preserved on purpose.
+    sudo docker compose -f "$COMPOSE_FILE" down
+    ;;
+  disable)
+    # With restart:unless-stopped, a *manually stopped* container is NOT restarted on the
+    # next boot. `docker update --restart=no` makes that permanent even if someone runs
+    # `docker start`. Together: it will not come back until you `enable`.
+    echo "stopping and disabling boot autostart for $NAME ..."
+    sudo docker update --restart=no "$NAME" 2>/dev/null || true
+    sudo docker stop "$NAME" 2>/dev/null || true
+    echo "done. It will stay down across reboots. Run 'zeam-mirror enable' to bring it back."
+    ;;
+  enable)
+    sudo docker update --restart=unless-stopped "$NAME" 2>/dev/null || true
+    sudo docker start "$NAME" 2>/dev/null || sudo docker compose -f "$COMPOSE_FILE" up -d
+    echo "re-armed: will auto-start on boot."
+    ;;
+  status)
+    echo "=== container ==="
+    sudo docker ps -a --filter "name=$NAME" --format "{{.Names}}\t{{.Status}}"
+    echo "=== published port ==="
+    sudo docker port "$NAME" 2>/dev/null || echo "  (not running)"
+    echo "=== restart policy ==="
+    sudo docker inspect "$NAME" --format "{{.HostConfig.RestartPolicy.Name}}" 2>/dev/null || echo "  (no container)"
+    echo "=== row counts (loopback) ==="
+    for t in audience_device_profile audience_device_profile_summary audience_program_coview log; do
+      n=$(sudo docker exec "$NAME" psql -U zeam_user -d zeam_db -tAc "SELECT count(*) FROM public.$t" 2>/dev/null || echo "n/a")
+      echo "  $t = $n"
+    done
+    ;;
+  logs)
+    sudo docker logs -f --tail 50 "$NAME"
+    ;;
+  psql)
+    sudo docker exec -it "$NAME" psql -U zeam_user -d zeam_db
+    ;;
+  *)
+    usage; exit 1 ;;
+esac

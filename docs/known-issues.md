@@ -155,3 +155,11 @@ DHH (David Heinemeier Hansson) created [Omarchy](https://world.hey.com/dhh/omarc
 1. Easiest path: install on a separate Arch partition using `archinstall` with Hyprland profile
 2. On current Debian: would require backports or building from source (Hyprland needs newer wlroots than bookworm provides)
 3. Given the single-core limitation, expect reduced performance compared to a healthy system
+
+## Docker services on boot
+
+Docker starts at boot (`/etc/rc*.d/S01docker`). The main persistent container here is the
+**Zeam mirror Postgres** (`zeam-mirror-postgres`), which auto-starts and holds a warm 4 GB. See
+[zeam-mirror-postgres.md](zeam-mirror-postgres.md) for what it is, the 2026-07-24 reboot gotcha
+(tailnet-IP port bind raced boot order — now bound to `0.0.0.0`), and **how to stop it from
+booting** (`bin/zeam-mirror disable`).
