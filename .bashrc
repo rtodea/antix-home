@@ -151,3 +151,7 @@ export NVM_DIR="$HOME/.config/nvm"
 eval "$(starship init bash)"
 
 . "$HOME/.local/bin/env"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/robert/.local/bin:$PATH"
