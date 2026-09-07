@@ -19,6 +19,7 @@
 !/.xsessionrc
 !/.bashrc
 !/.zshrc
+!/.fbtermrc
 
 # --- Window manager and session configs -------------------------------------
 !/.desktop-session/
@@ -40,10 +41,22 @@
 !/.config/i3/
 !/.config/autostart/
 !/.config/gtk-3.0/
+!/.config/roxterm.sourceforge.net/
 
 # --- Scripts and documentation ----------------------------------------------
 !/bin/
 !/docs/
+
+# --- ~/.local/bin -----------------------------------------------------------
+# Same three-level dance as ~/.config, but tighter: this directory also holds
+# uv, the Antigravity CLI and a symlink into the Claude install, which are
+# hundreds of megabytes of binaries. Negate individual scripts, never the
+# directory.
+!/.local/
+/.local/*
+!/.local/bin/
+/.local/bin/*
+!/.local/bin/fbt
 
 # --- Display layout ---------------------------------------------------------
 # ~/.screenlayout/default.sh sets the panel resolution and is run at every

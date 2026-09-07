@@ -1,0 +1,18 @@
+# FbTerm configuration
+# Primary font first, emoji fallback second. Symbola supplies the emoji
+# outlines the kernel console font (512-glyph PSF) cannot hold.
+font-names=FiraCode Nerd Font Mono,Symbola
+
+# 3840x2160 panel - console font is 32px tall, so match roughly.
+font-size=32
+
+color-foreground=7
+color-background=0
+
+history-lines=5000
+
+cursor-shape=1
+cursor-interval=500
+
+word-chars=._-
+screen-rotate=0

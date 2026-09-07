@@ -1,0 +1,12 @@
+#!/bin/sh
+# fbt [fbterm options] - start fbterm running a login shell with TERM=fbterm.
+#
+# fbterm hardcodes TERM=linux (8 colors) even though it ships an "fbterm"
+# terminfo entry with 256. Without this override, TUIs render in 8 colors.
+#
+# All arguments are forwarded to fbterm as options, e.g. a one-off font size:
+#     fbt -s 32
+#
+# To run a specific command instead of a login shell:
+#     fbterm -- env TERM=fbterm <command>
+exec fbterm "$@" -- env TERM=fbterm "${SHELL:-/bin/bash}" -l
