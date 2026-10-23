@@ -14,14 +14,20 @@ Roku / iPhone ──Wi-Fi──► wlan0 (hostapd + dnsmasq, 192.168.50.1/24, SS
 
 | Command | Effect |
 |---|---|
-| `us-gateway up` | Start the AP, firewall/NAT and the tunnel |
+| `us-gateway up` | Bring up the tether, then start the AP, firewall/NAT and the tunnel |
 | `us-gateway status` | AP state, DHCP clients, tunnel, exit country (tunnel vs. p73) |
 | `us-gateway down` | Stop all and give `wlan0` back to ConnMan |
+| `us-gateway wifi [NAME]` | `down`, then use `wlan0` as a normal Wi-Fi client; with NAME, join that known network |
+| `us-gateway tether` | Bring `usb0` up and connect ConnMan's Wired service (also done by `up`) |
 | `us-gateway vpn-up` / `vpn-down` | Restart / stop only the tunnel |
 | `us-gateway server [cc]` | Get NordVPN's recommended OpenVPN-UDP server (default `us`) |
 | `us-gateway auth` | Prompt for NordVPN **service** credentials, store them root-only |
 
-The setup is **not persistent**. After a reboot, run `us-gateway up` again.
+The setup is **not persistent**. After a reboot: turn on USB tethering on the phone, then run
+`us-gateway up`.
+
+Back to normal Wi-Fi: `us-gateway wifi` (ConnMan picks a known network) or
+`us-gateway wifi "Robert's Smart Watch"`. Back to the gateway: `us-gateway up`.
 
 ## Secrets (not in this repo — the remote is public)
 
@@ -55,4 +61,7 @@ The setup is **not persistent**. After a reboot, run `us-gateway up` again.
 - **Docker sets the `FORWARD` policy to DROP.** The accept rules go into `DOCKER-USER`.
 - antiX has no `/etc/init.d/connman`, so do not plan on restarting ConnMan to change
   `main.conf`. `down` gives `wlan0` back with `connmanctl disable/enable wifi`.
+- **After a reboot, `usb0` can come up DOWN, and ConnMan shows no Wired service.** The phone
+  also uses a new random MAC for each tether session, so the ConnMan id
+  (`ethernet_<mac>_cable`) changes. `us-gateway tether` handles both problems.
 - **Reaching the Roku for deploys:** join P73-US from the laptop. The Roku was at 192.168.50.84.

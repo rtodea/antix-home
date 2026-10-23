@@ -42,10 +42,14 @@ SELF=$(readlink -f "$0")
 
 usage() {
   cat <<EOF
-usage: us-gateway {up|down|status|vpn-up|vpn-down|server [CC]|auth}
+usage: us-gateway {up|down|status|tether|wifi [NAME]|vpn-up|vpn-down|server [CC]|auth}
 
-  up        start the AP (hostapd + dnsmasq), firewall/NAT, then the VPN
+  up        bring up the tether, start the AP (hostapd + dnsmasq), firewall/NAT, then the VPN
   down      stop everything and hand wlan0 back to ConnMan
+  tether    bring usb0 up and connect ConnMan's Wired service (its id changes every time:
+            the phone picks a random MAC per tether session)
+  wifi      down, then use wlan0 as a normal Wi-Fi client again; with NAME, join that
+            known network (e.g. us-gateway wifi "Robert's Smart Watch")
   status    AP clients, tunnel state, US exit check
   vpn-up    (re)start only the OpenVPN tunnel
   vpn-down  stop only the tunnel (AP clients then have NO internet — no leak)
@@ -101,6 +105,35 @@ stop_pid() {  # $1 = pidfile
   sudo rm -f "$1"
 }
 
+# `connmanctl services` lines look like "*AO Wired    ethernet_0e989c692fd8_cable":
+# flags, a padded name, then the service id as the last field.
+service_id() {  # $1 = id prefix (ethernet_ / wifi_), $2 = optional exact name
+  connmanctl services 2>/dev/null | awk -v pre="$1" -v name="$2" '
+    $NF ~ "^" pre {
+      line = substr($0, 5); sub(/[ \t]+[^ \t]+$/, "", line); sub(/[ \t]+$/, "", line)
+      if (name == "" || line == name) { print $NF; exit }
+    }'
+}
+
+tether() {
+  ip link show $UPLINK_IF >/dev/null 2>&1 || {
+    echo "no $UPLINK_IF: turn on USB tethering on the phone (cable in, phone unlocked)"; exit 1; }
+  sudo ip link set $UPLINK_IF up
+  for i in $(seq 1 10); do
+    id=$(service_id ethernet_)
+    [ -n "$id" ] && break
+    sleep 1
+  done
+  [ -n "$id" ] && connmanctl connect "$id" >/dev/null 2>&1 || true
+  for i in $(seq 1 15); do
+    ip route | grep -q "^default .*$UPLINK_IF" && break
+    sleep 1
+  done
+  ip route | grep -q "^default .*$UPLINK_IF" || {
+    echo "$UPLINK_IF has no default route yet (ConnMan service: ${id:-none}). Try: sudo dhclient $UPLINK_IF"; exit 1; }
+  echo "tether ok: $(ip -br addr show $UPLINK_IF | awk '{print $1, $3}')"
+}
+
 vpn_up() {
   [ -f $OVPN ] || { echo "no $OVPN — run: us-gateway server"; exit 1; }
   sudo test -s $AUTH || { echo "no NordVPN credentials — run: us-gateway auth"; exit 1; }
@@ -122,6 +155,7 @@ case "${1:-status}" in
     ;;
   up)
     sudo test -s $ETC/wifi-passphrase || { echo "no $ETC/wifi-passphrase (root-only, one line)"; exit 1; }
+    tether
     sudo mkdir -p $RUN
     # ConnMan's own `tether wifi` is broken with this AX200 (clients associate but only ARP
     # passes) and it runs with --nodnsproxy, so it gives clients no DNS. Use hostapd instead.
@@ -178,6 +212,26 @@ EOF
     connmanctl disable wifi >/dev/null 2>&1 || true
     connmanctl enable wifi >/dev/null 2>&1 || true
     echo "us-gateway down; wlan0 returned to ConnMan."
+    ;;
+  tether)
+    tether
+    ;;
+  wifi)
+    "$SELF" down
+    if [ -n "$2" ]; then
+      for i in $(seq 1 10); do
+        connmanctl scan wifi >/dev/null 2>&1 || true
+        id=$(service_id wifi_ "$2")
+        [ -n "$id" ] && break
+        sleep 2
+      done
+      [ -n "$id" ] || { echo "Wi-Fi network not found: $2 (see: connmanctl services)"; exit 1; }
+      connmanctl connect "$id"
+    fi
+    sleep 5
+    echo "=== wlan0 ==="
+    ip -br addr show $AP_IF
+    connmanctl services | grep "^\*" || true
     ;;
   vpn-up)
     sudo mkdir -p $RUN
