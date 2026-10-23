@@ -1,0 +1,225 @@
+#!/bin/sh
+# us-gateway — turn p73 into a Wi-Fi access point whose clients exit in the US via NordVPN.
+#
+# Built for the Zeam Roku stick (Zeam's HLS CDN is US-only) and for demoing it on an iPhone.
+# Windows could not do this: NordVPN's NordLynx and ovpn-dco adapters cannot be shared with
+# Internet Connection Sharing. Linux can, with plain policy routing.
+#
+#   uplink   phone USB tether            usb0
+#   AP       hostapd + dnsmasq           wlan0  192.168.50.1/24, SSID P73-US
+#   tunnel   OpenVPN, NordVPN US server  tun0   (ONLY 192.168.50.0/24 is routed into it)
+#
+# The p73's own traffic (SSH, Tailscale) stays on usb0, so the box stays reachable while the
+# tunnel flaps. If the tunnel is down, AP traffic is blackholed instead of leaking out usb0.
+#
+# Secrets are NOT in this repo (public remote). They live root-only on the box:
+#   /etc/us-gateway/wifi-passphrase     WPA2 passphrase for P73-US (one line)
+#   /etc/openvpn/nord/auth.txt          NordVPN *service* credentials (user, pass; 2 lines)
+#                                       — write it with `us-gateway auth`
+# Docs: ~/docs/us-gateway.md
+#
+# Nothing here is persistent: run `us-gateway up` again after a reboot.
+
+set -e
+
+SSID=P73-US
+CHANNEL=6
+COUNTRY=RO
+AP_IF=wlan0
+UPLINK_IF=usb0
+AP_NET=192.168.50.0/24
+AP_IP=192.168.50.1
+DHCP_RANGE=192.168.50.10,192.168.50.100,255.255.255.0,12h
+TABLE=100
+NORD_DNS1=103.86.96.100
+NORD_DNS2=103.86.99.100
+
+ETC=/etc/us-gateway
+RUN=/run/us-gateway
+OVPN=/etc/openvpn/nord/us.ovpn
+AUTH=/etc/openvpn/nord/auth.txt
+SELF=$(readlink -f "$0")
+
+usage() {
+  cat <<EOF
+usage: us-gateway {up|down|status|vpn-up|vpn-down|server [CC]|auth}
+
+  up        start the AP (hostapd + dnsmasq), firewall/NAT, then the VPN
+  down      stop everything and hand wlan0 back to ConnMan
+  status    AP clients, tunnel state, US exit check
+  vpn-up    (re)start only the OpenVPN tunnel
+  vpn-down  stop only the tunnel (AP clients then have NO internet — no leak)
+  server    fetch NordVPN's recommended OpenVPN-UDP server config (default country: us)
+  auth      prompt for NordVPN service credentials and store them root-only
+EOF
+}
+
+# --- OpenVPN up/down hook ----------------------------------------------------
+# OpenVPN calls "$SELF hook <dev> ..." with $script_type set. Runs as root.
+hook() {
+  case "$script_type" in
+    up)
+      # Local AP traffic (dnsmasq replies from $AP_IP, DHCP) must stay on wlan0. Without this
+      # route the "from $AP_NET" rule would push the box's own replies into the tunnel.
+      ip route replace "$AP_NET" dev "$AP_IF" table $TABLE
+      ip route replace default dev "$dev" table $TABLE
+      ip route replace blackhole default metric 1000 table $TABLE
+      ip rule show | grep -q "from $AP_NET lookup $TABLE" || ip rule add from "$AP_NET" lookup $TABLE priority 100
+      # NordVPN DNS (used by dnsmasq) goes through the tunnel as well.
+      ip route replace $NORD_DNS1/32 dev "$dev"
+      ip route replace $NORD_DNS2/32 dev "$dev"
+      iptables -t nat -C POSTROUTING -s "$AP_NET" -o "$dev" -j MASQUERADE 2>/dev/null ||
+        iptables -t nat -A POSTROUTING -s "$AP_NET" -o "$dev" -j MASQUERADE
+      ;;
+    down)
+      ip route del default dev "$dev" table $TABLE 2>/dev/null || true
+      ;;
+  esac
+}
+
+firewall() {  # $1 = -I (add) or -D (delete)
+  op=$1
+  if [ "$op" = -I ]; then
+    sudo iptables -C DOCKER-USER -i $AP_IF -j ACCEPT 2>/dev/null ||
+      sudo iptables -I DOCKER-USER -i $AP_IF -j ACCEPT
+    sudo iptables -C DOCKER-USER -o $AP_IF -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 2>/dev/null ||
+      sudo iptables -I DOCKER-USER -o $AP_IF -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+  else
+    # Docker owns FORWARD (policy DROP); DOCKER-USER is the chain it leaves to us.
+    sudo iptables -D DOCKER-USER -i $AP_IF -j ACCEPT 2>/dev/null || true
+    sudo iptables -D DOCKER-USER -o $AP_IF -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 2>/dev/null || true
+    for o in $UPLINK_IF tun0; do
+      sudo iptables -t nat -D POSTROUTING -s $AP_NET -o $o -j MASQUERADE 2>/dev/null || true
+    done
+    sudo ip rule del from $AP_NET lookup $TABLE 2>/dev/null || true
+    sudo ip route flush table $TABLE 2>/dev/null || true
+  fi
+}
+
+stop_pid() {  # $1 = pidfile
+  [ -f "$1" ] && sudo kill "$(cat "$1")" 2>/dev/null || true
+  sudo rm -f "$1"
+}
+
+vpn_up() {
+  [ -f $OVPN ] || { echo "no $OVPN — run: us-gateway server"; exit 1; }
+  sudo test -s $AUTH || { echo "no NordVPN credentials — run: us-gateway auth"; exit 1; }
+  stop_pid $RUN/openvpn.pid
+  sudo openvpn --config $OVPN --auth-user-pass $AUTH \
+    --route-nopull --route-noexec \
+    --script-security 2 --up "$SELF hook" --down "$SELF hook" \
+    --daemon us-gateway --log /var/log/us-gateway-openvpn.log --writepid $RUN/openvpn.pid
+  for i in $(seq 1 30); do
+    sudo grep -q "Initialization Sequence Completed" /var/log/us-gateway-openvpn.log 2>/dev/null && break
+    sleep 1
+  done
+  sudo tail -1 /var/log/us-gateway-openvpn.log
+}
+
+case "${1:-status}" in
+  hook)
+    hook
+    ;;
+  up)
+    sudo test -s $ETC/wifi-passphrase || { echo "no $ETC/wifi-passphrase (root-only, one line)"; exit 1; }
+    sudo mkdir -p $RUN
+    # ConnMan's own `tether wifi` is broken with this AX200 (clients associate but only ARP
+    # passes) and it runs with --nodnsproxy, so it gives clients no DNS. Use hostapd instead.
+    connmanctl tether wifi off >/dev/null 2>&1 || true
+    stop_pid $RUN/hostapd.pid
+    stop_pid $RUN/dnsmasq.pid
+    sudo sh -c "umask 077; cat > $RUN/hostapd.conf" <<EOF
+interface=$AP_IF
+driver=nl80211
+ssid=$SSID
+country_code=$COUNTRY
+hw_mode=g
+channel=$CHANNEL
+ieee80211n=1
+wmm_enabled=1
+auth_algs=1
+wpa=2
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP
+wpa_passphrase=$(sudo cat $ETC/wifi-passphrase)
+EOF
+    sudo sh -c "cat > $RUN/dnsmasq.conf" <<EOF
+interface=$AP_IF
+bind-interfaces
+except-interface=lo
+no-resolv
+server=$NORD_DNS1
+server=$NORD_DNS2
+dhcp-range=$DHCP_RANGE
+dhcp-option=option:router,$AP_IP
+dhcp-option=option:dns-server,$AP_IP
+dhcp-leasefile=$RUN/dnsmasq.leases
+EOF
+    sudo rfkill unblock wifi
+    sudo ip link set $AP_IF down
+    sudo ip addr flush dev $AP_IF
+    sudo ip link set $AP_IF up
+    sudo ip addr add $AP_IP/24 dev $AP_IF
+    sudo hostapd -B -P $RUN/hostapd.pid $RUN/hostapd.conf >/dev/null
+    sleep 2
+    sudo dnsmasq -C $RUN/dnsmasq.conf -x $RUN/dnsmasq.pid
+    echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward >/dev/null
+    firewall -I
+    vpn_up
+    echo "AP $SSID up on $AP_IF ($AP_IP). Check: us-gateway status"
+    ;;
+  down)
+    stop_pid $RUN/openvpn.pid
+    stop_pid $RUN/dnsmasq.pid
+    stop_pid $RUN/hostapd.pid
+    firewall -D
+    sudo ip addr flush dev $AP_IF
+    # Let ConnMan take wlan0 back as a normal Wi-Fi client.
+    connmanctl disable wifi >/dev/null 2>&1 || true
+    connmanctl enable wifi >/dev/null 2>&1 || true
+    echo "us-gateway down; wlan0 returned to ConnMan."
+    ;;
+  vpn-up)
+    sudo mkdir -p $RUN
+    vpn_up
+    ;;
+  vpn-down)
+    stop_pid $RUN/openvpn.pid
+    echo "tunnel down; AP clients are blackholed until vpn-up."
+    ;;
+  status)
+    echo "=== access point ==="
+    sudo iw dev $AP_IF info 2>/dev/null | grep -E "ssid|type|channel" || echo "  $AP_IF: no info"
+    pgrep -a hostapd >/dev/null && echo "  hostapd: running" || echo "  hostapd: NOT running"
+    pgrep -a dnsmasq >/dev/null && echo "  dnsmasq: running" || echo "  dnsmasq: NOT running"
+    echo "=== clients (DHCP leases) ==="
+    sudo cat $RUN/dnsmasq.leases 2>/dev/null | awk '{print "  " $3 "  " $4 "  " $2}' || true
+    echo "=== tunnel ==="
+    ip -br addr show tun0 2>/dev/null || echo "  tun0: down"
+    sudo grep -m1 -o "VERIFY OK: depth=0, CN=[^ ]*" /var/log/us-gateway-openvpn.log 2>/dev/null | sed 's/^/  /' || true
+    echo "=== exit country ==="
+    printf "  via tunnel: "; curl -s -m 8 --interface tun0 https://ipinfo.io/country || echo "n/a"
+    printf "  p73 itself: "; curl -s -m 8 https://ipinfo.io/country || echo "n/a"
+    ;;
+  server)
+    cc=${2:-us}
+    id=$(curl -s -m 15 "https://api.nordvpn.com/v1/servers/countries" |
+      tr '{' '\n' | grep -i "\"code\":\"$cc\"" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+    [ -n "$id" ] || { echo "unknown country code: $cc"; exit 1; }
+    host=$(curl -s -m 15 "https://api.nordvpn.com/v1/servers/recommendations?filters\[country_id\]=$id&filters\[servers_technologies\]\[identifier\]=openvpn_udp&limit=1" |
+      grep -o '"hostname":"[^"]*"' | head -1 | cut -d'"' -f4)
+    [ -n "$host" ] || { echo "no recommended server returned"; exit 1; }
+    sudo mkdir -p "$(dirname $OVPN)"
+    sudo curl -s -m 20 -o $OVPN "https://downloads.nordcdn.com/configs/files/ovpn_udp/servers/$host.udp.ovpn"
+    echo "server: $host -> $OVPN (run: us-gateway vpn-up)"
+    ;;
+  auth)
+    sudo mkdir -p "$(dirname $AUTH)"
+    printf "NordVPN service username: "; read -r u
+    printf "NordVPN service password: "; stty -echo; read -r p; stty echo; echo
+    printf "%s\n%s\n" "$u" "$p" | sudo sh -c "umask 077; cat > $AUTH"
+    echo "saved $AUTH"
+    ;;
+  *)
+    usage; exit 1 ;;
+esac
