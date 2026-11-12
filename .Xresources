@@ -9,3 +9,20 @@ Xcursor.size: 48
 
 ! urxvt colours 
 # include ".config/xresources.d/xcolours/antix.conf"
+
+! Font rendering. Deliberately grayscale, not subpixel: the panel runs at its
+! native 3840x2160 while the framebuffer is 1920x1080 (see ~/.screenlayout/
+! default.sh), so every logical pixel is drawn as a 2x2 physical block. Subpixel
+! antialiasing assumes it owns the real R/G/B stripes -- under that 2x upscale
+! its colour fringes get doubled into visible red/blue edging instead of
+! blending away. Grayscale AA has nothing to misalign.
+Xft.antialias: 1
+Xft.rgba:      none
+Xft.lcdfilter: lcdnone
+Xft.hinting:   1
+Xft.hintstyle: hintslight
+
+! NOTE: Xft.dpi is deliberately NOT set. The large font sizes already in use
+! (roxterm at 22, i3 at 11) are the manual compensation for the 2x upscale.
+! Setting a real DPI here would apply a second time on top of them and leave
+! every font oversized.
