@@ -230,6 +230,68 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# Keyboard pointer control -- the equivalent of Windows' MouseKeys, for when the
+# touchpad/TrackPoint stops responding (both went silent at the kernel level on
+# 2026-11-12, emitting zero events while being touched).
+#
+# $mod+m enters the mode; the bar shows "mouse" as the binding-mode indicator if
+# it is toggled on with $mod+b. hjkl or the arrows move, Shift moves far, Ctrl
+# moves one pixel at a time for precise work, 1/2/3 click left/middle/right,
+# 4/5 scroll. Escape, Return or $mod+m leaves.
+#
+# Steps are in physical pixels on a 3840x2160 screen, so they are larger than
+# they would look on a 1080p desktop.
+set $p_step   40
+set $p_far    300
+set $p_fine   1
+
+mode "mouse" {
+        bindsym h exec --no-startup-id xdotool mousemove_relative -- -$p_step 0
+        bindsym j exec --no-startup-id xdotool mousemove_relative -- 0 $p_step
+        bindsym k exec --no-startup-id xdotool mousemove_relative -- 0 -$p_step
+        bindsym l exec --no-startup-id xdotool mousemove_relative -- $p_step 0
+
+        bindsym Left  exec --no-startup-id xdotool mousemove_relative -- -$p_step 0
+        bindsym Down  exec --no-startup-id xdotool mousemove_relative -- 0 $p_step
+        bindsym Up    exec --no-startup-id xdotool mousemove_relative -- 0 -$p_step
+        bindsym Right exec --no-startup-id xdotool mousemove_relative -- $p_step 0
+
+        bindsym Shift+h exec --no-startup-id xdotool mousemove_relative -- -$p_far 0
+        bindsym Shift+j exec --no-startup-id xdotool mousemove_relative -- 0 $p_far
+        bindsym Shift+k exec --no-startup-id xdotool mousemove_relative -- 0 -$p_far
+        bindsym Shift+l exec --no-startup-id xdotool mousemove_relative -- $p_far 0
+
+        bindsym Shift+Left  exec --no-startup-id xdotool mousemove_relative -- -$p_far 0
+        bindsym Shift+Down  exec --no-startup-id xdotool mousemove_relative -- 0 $p_far
+        bindsym Shift+Up    exec --no-startup-id xdotool mousemove_relative -- 0 -$p_far
+        bindsym Shift+Right exec --no-startup-id xdotool mousemove_relative -- $p_far 0
+
+        bindsym Control+h exec --no-startup-id xdotool mousemove_relative -- -$p_fine 0
+        bindsym Control+j exec --no-startup-id xdotool mousemove_relative -- 0 $p_fine
+        bindsym Control+k exec --no-startup-id xdotool mousemove_relative -- 0 -$p_fine
+        bindsym Control+l exec --no-startup-id xdotool mousemove_relative -- $p_fine 0
+
+        # clicks and scrolling
+        bindsym 1 exec --no-startup-id xdotool click 1
+        bindsym 2 exec --no-startup-id xdotool click 2
+        bindsym 3 exec --no-startup-id xdotool click 3
+        bindsym 4 exec --no-startup-id xdotool click 4
+        bindsym 5 exec --no-startup-id xdotool click 5
+
+        # press-and-hold, for drags: d grabs, u releases
+        bindsym d exec --no-startup-id xdotool mousedown 1
+        bindsym u exec --no-startup-id xdotool mouseup 1
+
+        # jump to the middle of the screen
+        bindsym c exec --no-startup-id xdotool mousemove 1920 1080
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+m mode "default"
+}
+
+bindsym $mod+m mode "mouse"
+
 # show/hide the status bar (starts hidden -- see the bar {} block below).
 # ~/bin/toggle-i3bar rather than i3's "bar mode toggle": that only flips
 # dock <-> hide, and hide still shows the bar whenever hidden_state is "show",
