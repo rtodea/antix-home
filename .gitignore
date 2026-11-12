@@ -16,6 +16,7 @@
 # --- Shell and X session ----------------------------------------------------
 !/.gitignore
 !/.Xresources
+!/.gtkrc-2.0
 !/.xsessionrc
 !/.bashrc
 !/.zshrc
@@ -40,6 +41,7 @@
 /.config/*
 !/.config/i3/
 !/.config/i3status/
+!/.config/fontconfig/
 !/.config/autostart/
 !/.config/gtk-3.0/
 !/.config/roxterm.sourceforge.net/
