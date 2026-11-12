@@ -1,16 +1,21 @@
 ! Mouse cursor. Covers legacy/Xt apps; XCURSOR_SIZE in ~/.xsessionrc covers
 ! GTK/Qt/Chrome and the i3 root cursor.
 !
-! 96 restores the apparent size the 2x-upscaled framebuffer used to give (48
-! logical px drawn as 96 physical), which on a native 3840x2160 panel means
-! asking for 96 outright.
+! 128 is a deliberate accessibility size, not a scaling artefact: on this panel
+! (~282 physical DPI) it is about 11.5mm, roughly what a 44px cursor looks like
+! on an ordinary 96-DPI display. 96 would have been the size the old
+! 2x-upscaled framebuffer gave, and it was not big enough.
 !
-! Adwaita rather than DMZ-White because 96 has to be a real pixmap to stay
-! sharp: Adwaita ships genuine 24/32/48/64/96 images for every common shape
-! (and a "text" cursor DMZ-White lacks), while DMZ-White stops at 48 and would
-! be upscaled 2x. Keep this in step with the GTK files and desktop-session.conf.
+! Adwaita because its images go highest of anything installed -- genuine
+! 24/32/48/64/96 for every common shape, plus a "text" cursor DMZ-White lacks,
+! where DMZ-White stops at 48. 128 is still an upscale of that 96 image, by
+! 1.33x, which is mild on shapes this simple; nothing installed ships a real
+! pixmap above 96, so any theme would upscale here.
+!
+! This size is stated in FIVE places that must agree: here, both GTK files,
+! ~/.xsettingsd, and ~/.desktop-session/desktop-session.conf.
 Xcursor.theme: Adwaita
-Xcursor.size: 96
+Xcursor.size: 128
 
 ! xcalc settings
 # include ".config/xresources.d/xcalc/xcalc.conf"
