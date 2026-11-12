@@ -1,0 +1,65 @@
+# i3status configuration.
+#
+# This lives here rather than in /etc/i3status.conf so it is tracked in the
+# dotfiles repo and survives an apt upgrade replacing the package's copy.
+# i3status prefers $XDG_CONFIG_HOME/i3status/config over /etc, so the bar picks
+# this up with no change to "status_command i3status" in the i3 config.
+
+general {
+        colors = true
+        interval = 5
+
+        # Tokyo Night, matching the window borders and the terminal.
+        color_good     = "#9ece6a"
+        color_degraded = "#e0af68"
+        color_bad      = "#f7768e"
+}
+
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "disk /"
+order += "memory"
+order += "load"
+order += "tztime local"
+
+# Networking is connman here, not NetworkManager, but these two modules read
+# the interface state straight from the kernel, so they work regardless.
+# No battery module: /sys/class/power_supply on this box has only AC and the
+# USB-C source PSUs, no BAT* device, so "battery all" rendered an empty block.
+wireless _first_ {
+        format_up   = " %essid %quality"
+        format_down = " down"
+}
+
+# eth0 is normally down (wlan0 is the live link), so format_down is the bare
+# glyph rather than an empty string: an empty full_text still gets a separator
+# drawn around it by i3bar, which reads as a gap in the status line.
+ethernet _first_ {
+        format_up   = " %ip"
+        format_down = ""
+}
+
+disk "/" {
+        format = " %avail"
+        low_threshold = 10
+        threshold_type = percentage_free
+}
+
+memory {
+        format = " %used"
+        format_degraded = " %used / %available left"
+        threshold_degraded = "2G"
+        threshold_critical = "1G"
+}
+
+load {
+        format = " %1min"
+        max_threshold = 4
+}
+
+# No %S. The general interval above is 5s, so a seconds field would sit stale
+# for five seconds at a time and read as a frozen clock. Showing seconds would
+# mean interval = 1, i.e. waking the bar five times as often for no real gain.
+tztime local {
+        format = " %Y-%m-%d  %H:%M"
+}
