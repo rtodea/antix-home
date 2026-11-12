@@ -1,27 +1,16 @@
-# Sourced by /etc/X11/Xsession.d/40x11-common_xsessionrc before the window
-# manager starts, so these are set for every X client in the session.
-
-# Mouse cursor size. This must be exported before i3 starts: i3 reads it when
-# setting the root-window cursor, and GTK/Qt/Chrome read it at startup. Setting
-# it only in ~/.Xresources would leave those apps at the default 24px.
+# NOT USED ON THIS MACHINE -- kept only so the situation is documented.
 #
-# 96 keeps the apparent size the old 2x-upscaled framebuffer gave (48 logical
-# px drawn as 96 physical). DMZ-White's largest real pixmap is 48, so this is a
-# 2x upscale and the edges soften a little; Adwaita ships a true 96 if that
-# matters more than the theme. Keep this in step with ~/.Xresources.
-export XCURSOR_THEME=DMZ-White
-export XCURSOR_SIZE=96
-
-# --- HiDPI --------------------------------------------------------------------
-# The panel runs natively at 3840x2160 (~/.screenlayout/default.sh) and Xft.dpi
-# 192 in ~/.Xresources does the scaling. That covers i3, urxvt, dmenu and Qt,
-# but GTK needs telling separately, and the two mechanisms multiply:
+# This file is read by /etc/X11/Xsession.d/40x11-common_xsessionrc, which runs
+# only if the session goes through Xsession(5). It does not here: the chain is
+# runsvdir -> slimski -> desktop-session -> i3, and /usr/local/bin/desktop-session
+# never sources Xsession. Verified by checking i3's own environment -- none of
+# the variables this file used to export were present in it.
 #
-#   GDK_SCALE=2      scales the whole GTK UI -- widgets and icons, not just text
-#   GDK_DPI_SCALE=.5 cancels the font half of that, which Xft.dpi 192 has
-#                    already applied; without it GTK text comes out 4x
+# The exports that used to live here (XCURSOR_THEME, XCURSOR_SIZE, and the
+# HiDPI GDK_*/QT_* settings) are now in:
 #
-# Qt reads the X DPI directly when told to, so it needs no explicit factor.
-export GDK_SCALE=2
-export GDK_DPI_SCALE=0.5
-export QT_AUTO_SCREEN_SCALE_FACTOR=1
+#     ~/.desktop-session/desktop-session.conf
+#
+# which desktop-session sources as bash before starting the window manager, so
+# they actually reach i3 and its children. Put new session-wide environment
+# variables there, not here.

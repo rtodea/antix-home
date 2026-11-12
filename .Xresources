@@ -1,11 +1,15 @@
 ! Mouse cursor. Covers legacy/Xt apps; XCURSOR_SIZE in ~/.xsessionrc covers
 ! GTK/Qt/Chrome and the i3 root cursor.
 !
-! 96 keeps the apparent size the 2x-upscaled setup used to give (48 logical px
-! drawn as 96 physical). the largest real DMZ-White pixmap is 48, so 96 is an
-! upscale and the edges soften slightly. Adwaita ships a genuine 96 pixmap if a
-! sharp cursor matters more than this theme -- switch both lines together.
-Xcursor.theme: DMZ-White
+! 96 restores the apparent size the 2x-upscaled framebuffer used to give (48
+! logical px drawn as 96 physical), which on a native 3840x2160 panel means
+! asking for 96 outright.
+!
+! Adwaita rather than DMZ-White because 96 has to be a real pixmap to stay
+! sharp: Adwaita ships genuine 24/32/48/64/96 images for every common shape
+! (and a "text" cursor DMZ-White lacks), while DMZ-White stops at 48 and would
+! be upscaled 2x. Keep this in step with the GTK files and desktop-session.conf.
+Xcursor.theme: Adwaita
 Xcursor.size: 96
 
 ! xcalc settings
