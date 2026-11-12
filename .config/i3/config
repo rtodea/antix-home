@@ -40,9 +40,12 @@ font pango:FiraCode Nerd Font Mono 11
 
 # NOTE: do not add an xrandr call here. The panel resolution is already set at
 # session start by ~/.screenlayout/default.sh, which autoscale-antix runs from
-# desktop-session. It uses "--mode 3840x2160 --scale .5x.5" (4K mode with a 0.5
-# transform), NOT a native 1920x1080 mode -- a plain "--mode 1920x1080" here
-# would fight that transform and leave a 960x540 framebuffer.
+# desktop-session. It now runs the panel natively at 3840x2160 with no scale
+# transform, and Xft.dpi 192 in ~/.Xresources does the scaling instead.
+#
+# That DPI also scales i3's own pixel values, so the numbers below are logical,
+# not physical: "pixel 2" draws 4 px and "gaps inner 6" leaves 12. Do not double
+# them by hand.
 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart

@@ -1,8 +1,12 @@
-! Mouse cursor. DMZ-White ships real 24/32/48 pixmaps, so 48 is a genuine
-! size rather than a blurry upscale. Covers legacy/Xt apps; XCURSOR_SIZE in
-! ~/.xsessionrc covers GTK/Qt/Chrome and the i3 root cursor.
+! Mouse cursor. Covers legacy/Xt apps; XCURSOR_SIZE in ~/.xsessionrc covers
+! GTK/Qt/Chrome and the i3 root cursor.
+!
+! 96 keeps the apparent size the 2x-upscaled setup used to give (48 logical px
+! drawn as 96 physical). the largest real DMZ-White pixmap is 48, so 96 is an
+! upscale and the edges soften slightly. Adwaita ships a genuine 96 pixmap if a
+! sharp cursor matters more than this theme -- switch both lines together.
 Xcursor.theme: DMZ-White
-Xcursor.size: 48
+Xcursor.size: 96
 
 ! xcalc settings
 # include ".config/xresources.d/xcalc/xcalc.conf"
@@ -10,19 +14,24 @@ Xcursor.size: 48
 ! urxvt colours 
 # include ".config/xresources.d/xcolours/antix.conf"
 
-! Font rendering. Deliberately grayscale, not subpixel: the panel runs at its
-! native 3840x2160 while the framebuffer is 1920x1080 (see ~/.screenlayout/
-! default.sh), so every logical pixel is drawn as a 2x2 physical block. Subpixel
-! antialiasing assumes it owns the real R/G/B stripes -- under that 2x upscale
-! its colour fringes get doubled into visible red/blue edging instead of
-! blending away. Grayscale AA has nothing to misalign.
+! Font rendering. The panel runs natively at 3840x2160 with no xrandr scaling
+! (~/.screenlayout/default.sh), which puts it near 282 physical DPI.
+!
+! Grayscale rather than subpixel: at this pixel density a glyph stem already
+! covers several pixels, so subpixel AA buys no real edge detail while still
+! tinting edges red/blue. It also keeps rendering identical if the framebuffer
+! is ever scaled again. Hinting stays slight -- at 192 logical DPI the glyph
+! grid is dense enough that heavier hinting only distorts shapes.
 Xft.antialias: 1
 Xft.rgba:      none
 Xft.lcdfilter: lcdnone
 Xft.hinting:   1
 Xft.hintstyle: hintslight
 
-! NOTE: Xft.dpi is deliberately NOT set. The large font sizes already in use
-! (roxterm at 22, i3 at 11) are the manual compensation for the 2x upscale.
-! Setting a real DPI here would apply a second time on top of them and leave
-! every font oversized.
+! Xft.dpi drives everything that is not GTK or Qt: the i3 font, and -- importantly
+! -- the i3 pixel values themselves. Verified at 192: "default_border pixel 2" renders as
+! 4 physical px and "gaps inner 6" as 12, so the numbers in the i3 config did
+! NOT need doubling for the move to a native framebuffer. Point sizes are
+! interpreted through this DPI too, which is why i3 at 11 and roxterm at 22 keep
+! the apparent size they had when the framebuffer was upscaled.
+Xft.dpi:       192

@@ -5,7 +5,23 @@
 # setting the root-window cursor, and GTK/Qt/Chrome read it at startup. Setting
 # it only in ~/.Xresources would leave those apps at the default 24px.
 #
-# DMZ-White provides 24, 32 and 48 as real pixmaps -- 48 is the largest true
-# size, so drop to 32 here (and in ~/.Xresources) if this is too big.
+# 96 keeps the apparent size the old 2x-upscaled framebuffer gave (48 logical
+# px drawn as 96 physical). DMZ-White's largest real pixmap is 48, so this is a
+# 2x upscale and the edges soften a little; Adwaita ships a true 96 if that
+# matters more than the theme. Keep this in step with ~/.Xresources.
 export XCURSOR_THEME=DMZ-White
-export XCURSOR_SIZE=48
+export XCURSOR_SIZE=96
+
+# --- HiDPI --------------------------------------------------------------------
+# The panel runs natively at 3840x2160 (~/.screenlayout/default.sh) and Xft.dpi
+# 192 in ~/.Xresources does the scaling. That covers i3, urxvt, dmenu and Qt,
+# but GTK needs telling separately, and the two mechanisms multiply:
+#
+#   GDK_SCALE=2      scales the whole GTK UI -- widgets and icons, not just text
+#   GDK_DPI_SCALE=.5 cancels the font half of that, which Xft.dpi 192 has
+#                    already applied; without it GTK text comes out 4x
+#
+# Qt reads the X DPI directly when told to, so it needs no explicit factor.
+export GDK_SCALE=2
+export GDK_DPI_SCALE=0.5
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
