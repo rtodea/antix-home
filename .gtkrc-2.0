@@ -4,7 +4,7 @@
 include "/home/demo/.gtkrc-2.0.mine"
 gtk-theme-name="Arc-EvoPro2"
 gtk-icon-theme-name="papirus-antix"
-gtk-font-name="Ubuntu 10.5"
+gtk-font-name="Inter 10.5"
 gtk-cursor-theme-name="Adwaita"
 gtk-cursor-theme-size=160
 gtk-toolbar-style=GTK_TOOLBAR_ICONS

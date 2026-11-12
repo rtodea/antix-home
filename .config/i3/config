@@ -37,7 +37,7 @@ focus_follows_mouse yes
 # bar {} block. Emoji in window titles still render fine via fontconfig
 # fallback; it is naming the family explicitly that inflates pango's metrics
 # and clips the text.
-font pango:FiraCode Nerd Font Mono 11
+font pango:JetBrainsMono Nerd Font Mono 11
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -343,9 +343,11 @@ bar {
         # Do NOT put "Noto Color Emoji" in this font list. It is a bitmap-only
         # colour font, and pango reports inflated ascent/descent for it. i3bar
         # sizes the bar from those metrics but renders with the primary font,
-        # which is what was clipping the status text. FiraCode Nerd Font already
-        # carries icon glyphs, so no emoji fallback is needed here.
-        font pango:FiraCode Nerd Font Mono 11
+        # which is what was clipping the status text. JetBrainsMono Nerd Font
+        # is glyph-patched, so no emoji fallback is needed here -- all five
+        # icons used by ~/.config/i3status/config were checked against its
+        # charset before this font was switched in.
+        font pango:JetBrainsMono Nerd Font Mono 11
 
         # Breathing room above/below the text so descenders aren't shaved off.
         padding 2px 6px 2px 6px

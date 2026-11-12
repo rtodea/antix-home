@@ -1,3 +1,6 @@
 {
-    "window.zoomLevel": -1.58
+    "window.zoomLevel": -1.58,
+    "editor.fontFamily": "'JetBrains Mono', 'FiraCode Nerd Font Mono', monospace",
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font Mono'"
 }
