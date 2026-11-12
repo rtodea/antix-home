@@ -13,4 +13,4 @@
 # Xft.dpi in ~/.Xresources and ~/.config/fontconfig/fonts.conf, and restating
 # them here would risk applying a second time on top of those.
 Gtk/CursorThemeName "Adwaita"
-Gtk/CursorThemeSize 128
+Gtk/CursorThemeSize 160

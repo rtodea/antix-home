@@ -1,21 +1,23 @@
 ! Mouse cursor. Covers legacy/Xt apps; XCURSOR_SIZE in ~/.xsessionrc covers
 ! GTK/Qt/Chrome and the i3 root cursor.
 !
-! 128 is a deliberate accessibility size, not a scaling artefact: on this panel
-! (~282 physical DPI) it is about 11.5mm, roughly what a 44px cursor looks like
-! on an ordinary 96-DPI display. 96 would have been the size the old
-! 2x-upscaled framebuffer gave, and it was not big enough.
+! 160 is a deliberate accessibility size, not a scaling artefact. This panel is
+! 3840px across 382mm, so ~255 DPI, which makes 160px about 15.9mm -- what a
+! 60px cursor looks like on an ordinary 96-DPI display. For reference on this
+! screen: 96px is 9.6mm (a 36px equivalent, which is what the old 2x-upscaled
+! framebuffer gave and was too small), 128px is 12.7mm, 192px is 19.1mm.
 !
 ! Adwaita because its images go highest of anything installed -- genuine
 ! 24/32/48/64/96 for every common shape, plus a "text" cursor DMZ-White lacks,
-! where DMZ-White stops at 48. 128 is still an upscale of that 96 image, by
-! 1.33x, which is mild on shapes this simple; nothing installed ships a real
-! pixmap above 96, so any theme would upscale here.
+! where DMZ-White stops at 48. 160 is still an upscale of that 96 image, by
+! 1.67x, so the edges are visibly softer than at 96; nothing installed ships a
+! real pixmap above 96, so no theme choice avoids that. Past roughly 192 it
+! starts reading as blurry rather than large.
 !
 ! This size is stated in FIVE places that must agree: here, both GTK files,
 ! ~/.xsettingsd, and ~/.desktop-session/desktop-session.conf.
 Xcursor.theme: Adwaita
-Xcursor.size: 128
+Xcursor.size: 160
 
 ! xcalc settings
 # include ".config/xresources.d/xcalc/xcalc.conf"
@@ -24,7 +26,7 @@ Xcursor.size: 128
 # include ".config/xresources.d/xcolours/antix.conf"
 
 ! Font rendering. The panel runs natively at 3840x2160 with no xrandr scaling
-! (~/.screenlayout/default.sh), which puts it near 282 physical DPI.
+! (~/.screenlayout/default.sh), which puts it near 255 physical DPI.
 !
 ! Grayscale rather than subpixel: at this pixel density a glyph stem already
 ! covers several pixels, so subpixel AA buys no real edge detail while still
