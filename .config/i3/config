@@ -197,10 +197,23 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# show/hide the status bar (starts hidden -- see the bar {} block below)
+bindsym $mod+b bar mode toggle main
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+        id main
         status_command i3status
+
+        # Start with the bar hidden and let $mod+b toggle it (see the binding
+        # above). "hide" is the hidden half of that toggle; "modifier none"
+        # stops the bar from popping up on its own whenever $mod is held, so
+        # the keybinding is the only thing that reveals it. Toggling on puts
+        # the bar in "dock" mode, which reserves screen space instead of
+        # overlaying the focused window.
+        mode hide
+        modifier none
 
         # Do NOT put "Noto Color Emoji" in this font list. It is a bitmap-only
         # colour font, and pango reports inflated ascent/descent for it. i3bar
