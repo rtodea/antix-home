@@ -43,6 +43,24 @@
 !/.config/i3/
 !/.config/i3status/
 !/.config/fontconfig/
+
+# VS Code and Cursor: the user settings file only, never the rest of those
+# directories -- they hold caches, blob storage, workspace state and extension
+# data, which is hundreds of megabytes and machine-local. Each level has to be
+# re-included before its contents can be, hence three lines per app.
+#
+# CAUTION: this remote is public. Some extensions write credentials into
+# settings.json; check `git diff` before committing changes to these two.
+!/.config/Code/
+/.config/Code/*
+!/.config/Code/User/
+/.config/Code/User/*
+!/.config/Code/User/settings.json
+!/.config/Cursor/
+/.config/Cursor/*
+!/.config/Cursor/User/
+/.config/Cursor/User/*
+!/.config/Cursor/User/settings.json
 !/.config/autostart/
 !/.config/gtk-3.0/
 !/.config/roxterm.sourceforge.net/
