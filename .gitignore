@@ -62,6 +62,17 @@
 /.local/bin/*
 !/.local/bin/fbt
 
+# --- ~/.local/share/applications --------------------------------------------
+# Only the Chrome launcher override, which points at bin/google-chrome-stable.
+# The rest of the directory is generated or machine-local. This has to come
+# after the /.local/* line above: last matching pattern wins, so negating it
+# earlier would be undone by that line re-excluding everything under ~/.local.
+!/.local/share/
+/.local/share/*
+!/.local/share/applications/
+/.local/share/applications/*
+!/.local/share/applications/google-chrome.desktop
+
 # --- Display layout ---------------------------------------------------------
 # ~/.screenlayout/default.sh sets the panel resolution and is run at every
 # session start by autoscale-antix. Losing it means losing the readable

@@ -1,0 +1,17 @@
+#!/bin/sh
+# google-chrome-stable — launch Chrome at a 1.5x device scale instead of 2x.
+#
+# The session exports GDK_SCALE=2 (see ~/.desktop-session/desktop-session.conf),
+# which Chrome reads as its device scale factor. That is correct for GTK apps on
+# this 3840x2160 panel, but it makes Chrome's whole interface -- tab strip,
+# address bar, menus -- larger than wanted. --force-device-scale-factor
+# overrides GDK_SCALE for Chrome alone and leaves every other app at 2x.
+#
+# Note this scales page content as well as the interface, so saved per-site
+# zoom levels stack on top of it (chrome://settings/content/zoomLevels).
+#
+# Installed by shadowing the vendor binary: /usr/local/bin comes before /usr/bin
+# in the session PATH, and /usr/local/bin/google-chrome-stable symlinks here.
+# The vendor wrapper at /opt/google/chrome/google-chrome has no flags-file hook
+# of its own -- it is just "exec -a $0 $HERE/chrome $@" -- hence this script.
+exec /opt/google/chrome/google-chrome --force-device-scale-factor=1.5 "$@"
