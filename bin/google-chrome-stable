@@ -15,8 +15,18 @@
 # Note this scales page content as well as the interface, so saved per-site
 # zoom levels stack on top of it (chrome://settings/content/zoomLevels).
 #
-# Installed by shadowing the vendor binary: /usr/local/bin comes before /usr/bin
-# in the session PATH, and /usr/local/bin/google-chrome-stable symlinks here.
+# Installed by shadowing the vendor binaries: /usr/local/bin comes before
+# /usr/bin in the session PATH, and BOTH names symlink here --
+# /usr/local/bin/google-chrome-stable and /usr/local/bin/google-chrome. The deb
+# installs both, dmenu lists both, and shadowing only one leaves a launch path
+# that silently bypasses this flag.
+#
+# Chrome must be fully exited for a flag change to apply. Closing the last
+# window is not enough: i3's $mod+Shift+q is "kill", which closes the focused X
+# window and leaves the browser process running, and a later launch then hands
+# off to that process, which ignores command-line flags entirely. Quit with
+# Chrome's own Ctrl+Shift+Q, or check that "pgrep -x chrome" is empty, then
+# relaunch and confirm the live command line at chrome://version.
 # The vendor wrapper at /opt/google/chrome/google-chrome has no flags-file hook
 # of its own -- it is just "exec -a $0 $HERE/chrome $@" -- hence this script.
 exec /opt/google/chrome/google-chrome --force-device-scale-factor=1 "$@"
