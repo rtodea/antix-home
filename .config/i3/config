@@ -230,8 +230,11 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# show/hide the status bar (starts hidden -- see the bar {} block below)
-bindsym $mod+b bar mode toggle main
+# show/hide the status bar (starts hidden -- see the bar {} block below).
+# ~/bin/toggle-i3bar rather than i3's "bar mode toggle": that only flips
+# dock <-> hide, and hide still shows the bar whenever hidden_state is "show",
+# which puts it on top of window content instead of hiding it.
+bindsym $mod+b exec --no-startup-id $HOME/bin/toggle-i3bar
 
 # Window colours. i3's stock palette is blue (#285577) and clashes with the
 # Tokyo Night terminal; child_border is the one that actually paints the 2px
@@ -250,14 +253,18 @@ bar {
         id main
         status_command i3status
 
-        # Start with the bar hidden and let $mod+b toggle it (see the binding
-        # above). "hide" is the hidden half of that toggle; "modifier none"
-        # stops the bar from popping up on its own whenever $mod is held, so
-        # the keybinding is the only thing that reveals it. Toggling on puts
-        # the bar in "dock" mode, which reserves screen space instead of
-        # overlaying the focused window.
-        mode hide
+        # Start with the bar gone, and let $mod+b toggle it via
+        # ~/bin/toggle-i3bar. "invisible" is stronger than "hide": a hidden bar
+        # is still shown whenever hidden_state flips to "show", which is how it
+        # ends up overlaying window content. An invisible bar is never mapped.
+        # The script toggles to "dock", which reserves space rather than
+        # covering windows.
+        #
+        # modifier none is kept as a backstop: if the bar is ever put back into
+        # hide mode, holding $mod alone still will not reveal it.
+        mode invisible
         modifier none
+        hidden_state hide
 
         # Do NOT put "Noto Color Emoji" in this font list. It is a bitmap-only
         # colour font, and pango reports inflated ascent/descent for it. i3bar

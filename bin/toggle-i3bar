@@ -1,0 +1,22 @@
+#!/bin/sh
+# toggle-i3bar — flip i3bar between fully invisible and docked.
+#
+# i3's own "bar mode toggle" is not enough. It flips dock <-> hide, and in hide
+# mode the bar's visibility depends on a *second* piece of state, hidden_state.
+# While hidden_state is "hide" the bar does disappear, but if anything sets it
+# to "show" then hide stops meaning hidden and the bar sits on top of the
+# focused window instead. mode invisible has no such second state: i3bar never
+# maps its window, so there is no overlay case to fall into.
+#
+# Docked is deliberate for the visible half. A docked bar reserves screen space
+# via its strut, so it pushes window content rather than covering it.
+#
+# Bound to $mod+b in ~/.config/i3/config.
+set -eu
+
+BAR=${1:-main}
+
+case "$(i3-msg -t get_bar_config "$BAR" | jq -r .mode)" in
+    dock) i3-msg "bar mode invisible $BAR" >/dev/null ;;
+    *)    i3-msg "bar mode dock $BAR"      >/dev/null ;;
+esac
