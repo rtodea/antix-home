@@ -21,9 +21,14 @@ set $muted   #414868
 set $yellow  #e0af68
 set $urgent  #f7768e
 
-# Don't hand focus to whatever window happens to slide under the pointer --
-# with gaps and no title bars, a stray mouse makes focus feel unpredictable.
-focus_follows_mouse no
+# Focus follows the pointer, by preference. The default i3 behaviour, and worth
+# noting it was briefly turned off here on the theory that with gaps and no
+# title bars a stray pointer would make focus feel unpredictable -- in practice
+# that was not the experience wanted.
+#
+# mouse_warping stays at its default (output), so switching workspaces does not
+# yank the pointer across the screen.
+focus_follows_mouse yes
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
