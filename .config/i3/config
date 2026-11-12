@@ -11,6 +11,20 @@
 
 set $mod Mod4
 
+# Tokyo Night. These are the exact values from the roxterm colour scheme in
+# ~/.config/roxterm.sourceforge.net/Colours/Tokyo Night, so the window borders
+# and the terminal agree. Change them in both places or not at all.
+set $bg      #1a1b26
+set $fg      #c0caf5
+set $accent  #7aa2f7
+set $muted   #414868
+set $yellow  #e0af68
+set $urgent  #f7768e
+
+# Don't hand focus to whatever window happens to slide under the pointer --
+# with gaps and no title bars, a stray mouse makes focus feel unpredictable.
+focus_follows_mouse no
+
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 #
@@ -69,7 +83,7 @@ bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id dmenu_run -i -fn 'FiraCode Nerd Font Mono-11' -nb '$bg' -nf '$fg' -sb '$accent' -sf '$bg'
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
 # There also is i3-dmenu-desktop which only displays applications shipping a
@@ -126,18 +140,34 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
+# A 2px coloured border replaces the title bar: it costs ~24px less height per
+# window and the colour already says which window has focus. "smart" drops the
+# border entirely when a workspace holds a single window.
+default_border pixel 2
+default_floating_border pixel 2
+hide_edge_borders smart
+
+# Gaps are native to i3 since 4.22 -- no compositor involved, this is only
+# geometry. 6 is deliberate restraint: the framebuffer is 1920x1080 upscaled 2x
+# to the 4K panel (see the xrandr note above), so 6 lands as 12 physical px.
+# smart_gaps/smart_borders let a lone window go full-bleed.
+gaps inner 6
+gaps outer 0
+smart_gaps on
+smart_borders on
+
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
+set $ws1 "1 "
+set $ws2 "2 "
+set $ws3 "3 "
+set $ws4 "4 "
+set $ws5 "5 "
+set $ws6 "6 "
+set $ws7 "7 "
+set $ws8 "8 "
+set $ws9 "9 "
+set $ws10 "10 "
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -200,6 +230,17 @@ bindsym $mod+r mode "resize"
 # show/hide the status bar (starts hidden -- see the bar {} block below)
 bindsym $mod+b bar mode toggle main
 
+# Window colours. i3's stock palette is blue (#285577) and clashes with the
+# Tokyo Night terminal; child_border is the one that actually paints the 2px
+# border set above, while "border" only shows on title bars we no longer draw.
+#                       border   backgr.  text    indicator  child_border
+client.focused          $accent  $accent  $bg     $accent    $accent
+client.focused_inactive $muted   $muted   $fg     $muted     $muted
+client.unfocused        $bg      $bg      $muted  $bg        $muted
+client.urgent           $urgent  $urgent  $bg     $urgent    $urgent
+client.placeholder      $bg      $bg      $muted  $bg        $muted
+client.background       $bg
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
@@ -224,4 +265,19 @@ bar {
 
         # Breathing room above/below the text so descenders aren't shaved off.
         padding 2px 6px 2px 6px
+
+        separator_symbol " · "
+
+        colors {
+                background $bg
+                statusline $fg
+                separator  $muted
+
+                #                  border   backgr.  text
+                focused_workspace  $accent  $accent  $bg
+                active_workspace   $muted   $muted   $fg
+                inactive_workspace $bg      $bg      $muted
+                urgent_workspace   $urgent  $urgent  $bg
+                binding_mode       $yellow  $yellow  $bg
+        }
 }
