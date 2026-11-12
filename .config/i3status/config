@@ -7,7 +7,7 @@
 
 general {
         colors = true
-        interval = 5
+        interval = 1
 
         # Tokyo Night, matching the window borders and the terminal.
         color_good     = "#9ece6a"
@@ -16,7 +16,6 @@ general {
 }
 
 order += "wireless _first_"
-order += "ethernet _first_"
 order += "disk /"
 order += "memory"
 order += "load"
@@ -29,14 +28,6 @@ order += "tztime local"
 wireless _first_ {
         format_up   = " %essid %quality"
         format_down = " down"
-}
-
-# eth0 is normally down (wlan0 is the live link), so format_down is the bare
-# glyph rather than an empty string: an empty full_text still gets a separator
-# drawn around it by i3bar, which reads as a gap in the status line.
-ethernet _first_ {
-        format_up   = " %ip"
-        format_down = ""
 }
 
 disk "/" {
@@ -57,9 +48,14 @@ load {
         max_threshold = 4
 }
 
-# No %S. The general interval above is 5s, so a seconds field would sit stale
-# for five seconds at a time and read as a frozen clock. Showing seconds would
-# mean interval = 1, i.e. waking the bar five times as often for no real gain.
+# No seconds field, by request. The interval above is 1s rather than 5s for a
+# specific reason: the bar runs in hide mode, and i3bar SIGSTOPs its status
+# command while the bar is invisible. Coming back from that stop, i3status shows
+# whatever it last emitted until its next tick -- with interval = 5 that meant
+# pressing $mod+b could display a timestamp from hours earlier for up to five
+# seconds, which is what read as a frozen clock. At interval = 1 it is correct
+# within a second of becoming visible, and costs nothing the rest of the time
+# because the process is stopped, not sleeping.
 tztime local {
         format = " %Y-%m-%d  %H:%M"
 }
