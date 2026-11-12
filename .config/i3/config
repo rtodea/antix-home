@@ -347,6 +347,15 @@ bar {
         # is glyph-patched, so no emoji fallback is needed here -- all five
         # icons used by ~/.config/i3status/config were checked against its
         # charset before this font was switched in.
+        #
+        # Changing this font needs "i3 restart", not "i3 reload". i3bar is a
+        # long-running process with its own fontconfig view, so a bar still
+        # running from before a font was installed cannot see it and silently
+        # falls back to sans-serif -- which, with the alias in
+        # ~/.config/fontconfig/fonts.conf, means Inter, and the bar comes out
+        # proportional. The same reload-is-not-enough rule applies to the
+        # status_command: a reload leaves the old i3status serving the old
+        # config.
         font pango:JetBrainsMono Nerd Font Mono 11
 
         # Breathing room above/below the text so descenders aren't shaved off.
