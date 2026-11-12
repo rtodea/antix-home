@@ -1,0 +1,16 @@
+# XSETTINGS daemon config, read by xsettingsd(1) and served to GTK/Qt clients.
+#
+# Why this exists: pointer size reaches apps by three different routes on this
+# box, and only this one works on a *running* app.
+#
+#   ~/.Xresources (Xcursor.*)      -> i3's own windows and Xt-era clients
+#   XCURSOR_SIZE in the environment -> i3's root-window cursor, read at startup;
+#                                      set in ~/.desktop-session/desktop-session.conf
+#   XSETTINGS (this file)           -> GTK/Qt clients, and they react live
+#
+# Keep the values in step with .Xresources, both GTK files and the environment.
+# Deliberately limited to the cursor: DPI and font rendering already arrive via
+# Xft.dpi in ~/.Xresources and ~/.config/fontconfig/fonts.conf, and restating
+# them here would risk applying a second time on top of those.
+Gtk/CursorThemeName "Adwaita"
+Gtk/CursorThemeSize 96

@@ -65,6 +65,13 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # icon is docked (without it the icon is silently dropped on a cold start).
 exec --no-startup-id cmst -m -w 3
 
+# XSETTINGS daemon. Serves the pointer size to GTK/Qt clients, which is the only
+# one of the three cursor-size routes that reaches an already-running app --
+# ~/.Xresources covers Xt-era clients and XCURSOR_SIZE (in
+# ~/.desktop-session/desktop-session.conf) covers i3's root cursor at startup.
+# Config: ~/.xsettingsd. Costs about a megabyte resident.
+exec --no-startup-id xsettingsd
+
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
