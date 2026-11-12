@@ -1,5 +1,5 @@
 #!/bin/sh
-# google-chrome-stable — launch Chrome at a 1.5x device scale instead of 2x.
+# google-chrome-stable — launch Chrome at a chosen device scale.
 #
 # The session exports GDK_SCALE=2 (see ~/.desktop-session/desktop-session.conf),
 # which Chrome reads as its device scale factor. That is correct for GTK apps on
@@ -7,12 +7,15 @@
 # address bar, menus -- larger than wanted. --force-device-scale-factor
 # overrides GDK_SCALE for Chrome alone and leaves every other app at 2x.
 #
-# 1.5 is the first value actually tried. The earlier verdicts were measured
-# against the wrong thing: 1.5 and then 1 were set while a 2x browser process
-# was still running, and Chrome ignores command-line flags when a launch hands
-# off to an existing instance, so "1.5 still too big" was really 2x. 1 did take
-# effect once Chrome was fully exited, and was too small -- native panel pixels
-# at ~255 DPI. 1.75 and 1.25 are the steps either side.
+# Values tried on this panel: 1 is native panel pixels at ~255 DPI and too
+# small; 1.5 is comfortable; 2 matches what GDK_SCALE alone gave and read as
+# slightly large. The default below is the committed choice.
+#
+# To compare without editing this file, set CHROME_SCALE for one launch:
+#
+#     CHROME_SCALE=1.75 google-chrome-stable
+#
+# Remember Chrome must be fully exited first either way -- see below.
 #
 # Note this scales page content as well as the interface, so saved per-site
 # zoom levels stack on top of it (chrome://settings/content/zoomLevels).
@@ -31,4 +34,6 @@
 # relaunch and confirm the live command line at chrome://version.
 # The vendor wrapper at /opt/google/chrome/google-chrome has no flags-file hook
 # of its own -- it is just "exec -a $0 $HERE/chrome $@" -- hence this script.
-exec /opt/google/chrome/google-chrome --force-device-scale-factor=1.5 "$@"
+SCALE="${CHROME_SCALE:-2}"
+
+exec /opt/google/chrome/google-chrome --force-device-scale-factor="$SCALE" "$@"
